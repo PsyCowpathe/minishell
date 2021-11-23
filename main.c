@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:45:25 by agirona           #+#    #+#             */
-/*   Updated: 2021/11/23 18:47:05 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/11/23 19:11:38 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void	get_instruction(t_inst **inst, char *input, int *i)
 
 	while (1)
 	{
-		while (ft_iswhitespace(input[*i]) == 1)
+		while (input[*i] && ft_iswhitespace(input[*i]) == 1)
 			*i = *i + 1;
 		size = size_instruction(input, *i);
 		if (size == -1)
@@ -105,6 +105,7 @@ int		main(void)
 	t_inst	*inst;
 
 	exec_ret = 0;
+	inst = NULL;
 	while (exec_ret == 0)
 	{
 		i = 0;
