@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:45:30 by agirona           #+#    #+#             */
-/*   Updated: 2021/11/25 18:51:54 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/11/29 19:44:07 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,14 @@
 # include "../libft/libft.h"
 # include <readline/readline.h>
 
+char	*const *g_envp;
+
 typedef struct s_cmd
 {
+	int				builtin;
 	char			*str;
 	char			*exec;
-	int				flag;
+	int				echo_flag;
 	char			**args;
 	struct s_cmd	*next;
 }				t_cmd;
@@ -30,7 +33,6 @@ typedef struct s_inst
 {
 	char	*str;
 	t_cmd	*cmds;
-	struct s_inst	*next;
 }				t_inst;
 
 // instruction
@@ -45,9 +47,7 @@ void	cut_command(t_cmd *cmd);
 // lst_inst_utils
 
 t_inst	*instnew(char *content);
-void	instadd_back(t_inst **alst, t_inst *new);
-void	instclear(t_inst **lst);
-t_inst	*instlast(t_inst *lst);
+void	instclear(t_inst *lst);
 
 // lst_cmd_utils
 
@@ -64,5 +64,11 @@ void	print_debug(t_inst *inst);
 
 int		is_closed_quote(char *str, int i);
 int		size_to_char(char *input, int i, char *find);
+
+// command_utiliy
+
+int	is_builtin(t_cmd *cmd);
+int	count_args(char	*str, int i);
+int	strcmp_quote(char *str, char *find);
 
 #endif
