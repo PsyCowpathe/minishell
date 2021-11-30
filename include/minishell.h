@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:45:30 by agirona           #+#    #+#             */
-/*   Updated: 2021/11/30 16:59:30 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/11/30 18:27:48 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,5 +73,15 @@ int		size_to_char(char *input, int i, char *find);
 int	is_builtin(t_cmd *cmd);
 int	count_args(char	*str, int i);
 int	strcmp_quote(char *str, char *find);
+
+// builtin
+
+void	exec_echo(t_cmd *cmd);
+
+// path
+
+char	**get_path(void);
+char	*join_path(char *exec, char *path);
+void	exec_path(t_cmd *cmd);
 
 #endif

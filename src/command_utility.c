@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/29 16:57:58 by agirona           #+#    #+#             */
-/*   Updated: 2021/11/30 16:59:30 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/11/30 18:27:50 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ int	strcmp_quote(char *str, char *find)
 
 	i = 0;
 	trigger = 0;
+	c = 0;
 	if (str[i] == '"' || str[i] == '\'')
 	{
 		trigger++;
@@ -51,17 +52,17 @@ int	is_builtin(t_cmd *cmd)
 	if (strcmp_quote(cmd->exec, "cd") == 1)
 		return (1);
 	if (strcmp_quote(cmd->exec, "echo") == 1)
-		return (1);
+		return (2);
 	if (strcmp_quote(cmd->exec, "pwd") == 1)
-		return (1);
+		return (3);
 	if (strcmp_quote(cmd->exec, "export") == 1)
-		return (1);
+		return (4);
 	if (strcmp_quote(cmd->exec, "unset") == 1)
-		return (1);
+		return (5);
 	if (strcmp_quote(cmd->exec, "env") == 1)
-		return (1);
+		return (6);
 	if (strcmp_quote(cmd->exec, "exit") == 1)
-		return (1);
+		return (7);
 	return (0);
 }
 
