@@ -6,9 +6,11 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/30 18:25:49 by agirona           #+#    #+#             */
-/*   Updated: 2021/11/30 18:27:51 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/11/30 18:29:28 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "minishell.h"
 
 void	exec_echo(t_cmd *cmd)
 {
