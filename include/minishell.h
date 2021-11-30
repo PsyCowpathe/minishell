@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:45:30 by agirona           #+#    #+#             */
-/*   Updated: 2021/11/29 19:44:07 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/11/30 16:07:26 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ char	*const *g_envp;
 
 typedef struct s_cmd
 {
+	int				*ret;
 	int				builtin;
 	char			*str;
 	char			*exec;
@@ -56,9 +57,11 @@ void	cmdadd_back(t_cmd **alst, t_cmd *new);
 void	cmdclear(t_cmd **lst);
 t_cmd	*cmdlast(t_cmd *lst);
 
-// debug
+// debug															//ntm
 
 void	print_debug(t_inst *inst);
+void	print_env(void);
+void	print_path(char **path);
 
 // utility
 

@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/29 16:57:58 by agirona           #+#    #+#             */
-/*   Updated: 2021/11/29 19:44:05 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/11/30 16:58:06 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	strcmp_quote(char *str, char *find)
 			return (0);
 		i++;
 		d++;
-		while (str[i] == c)
+		while (str[i] && str[i] == c)
 		{
 			trigger++;
 			i++;

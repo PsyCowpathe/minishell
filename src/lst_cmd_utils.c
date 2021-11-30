@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 17:49:26 by agirona           #+#    #+#             */
-/*   Updated: 2021/11/29 15:21:03 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/11/30 15:35:58 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,10 @@ t_cmd	*cmdnew(char *content)
 
 	if (new_malloc((void *)&new, sizeof(t_cmd), 1) == 0)
 		return (NULL);
+	new->ret = malloc(4);
+	if (new->ret == NULL)
+		return (NULL);
+	new->ret[0] = 0;
 	new->builtin = 0;
 	new->str = content;
 	new->exec = NULL;

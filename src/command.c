@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 16:35:29 by agirona           #+#    #+#             */
-/*   Updated: 2021/11/29 19:44:04 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/11/30 15:10:33 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,14 @@ void	get_args(t_cmd *cmd, int i)
 	int		j;
 	int		size;
 
-	cmd->args = malloc(sizeof(char *) * (count_args(cmd->str, i) + 1));
-	j = 0;
+	cmd->args = malloc(sizeof(char *) * (count_args(cmd->str, i) + 2));
+	if (cmd->args == NULL)
+		return ;
+	j = 1;
+	cmd->args[0] = malloc(sizeof(char) * 1); 
+	if (cmd->args[0] == NULL)
+		return ;
+	cmd->args[0][0] = '\0';
 	while (ft_iswhitespace(cmd->str[i]) == 1)
 		i++;
 	while (cmd->str[i])

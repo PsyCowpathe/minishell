@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 16:30:01 by agirona           #+#    #+#             */
-/*   Updated: 2021/11/29 19:44:06 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/11/30 16:05:59 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,30 @@ void	print_debug(t_inst *inst)
 		then = then->next;
 	}
 	ft_putchar('\n');
+}
+
+void	print_path(char **path)
+{
+	int		i;
+
+	i = 0;
+	while (path[i])
+	{
+		ft_putstr(path[i]);
+		ft_putchar('\n');
+		i++;
+	}
+}
+
+void	print_env(void)
+{
+	int		i;
+
+	i = 0;
+	while (g_envp[i])
+	{
+		ft_putstr(g_envp[i]);
+		ft_putchar('\n');
+		i++;
+	}
 }
