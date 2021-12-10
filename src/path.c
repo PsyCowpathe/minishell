@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/30 18:26:48 by agirona           #+#    #+#             */
-/*   Updated: 2021/11/30 18:27:52 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/10 19:12:03 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ char	*join_path(char *exec, char *path)
 	return (ret);
 }
 
-void	exec_path(t_cmd *cmd)
+void	exec_lonely_path(t_cmd *cmd)
 {
 	pid_t	pid;
 	char	**path;
@@ -90,7 +90,34 @@ void	exec_path(t_cmd *cmd)
 				exit(0);
 		}
 		while ((wait(&pid)) > 0)
-			NULL;
+			;
 		i++;
 	}
+}
+
+int		exec_path(t_cmd *cmd)
+{
+	char	**path;
+	char	*tmp;
+	int		i;
+
+	i = 0;
+	cmd->ret[0] = execve(cmd->exec, cmd->args, g_envp);
+	if (cmd->ret[0] == 0)
+		exit(0);
+	else
+	{
+		path = get_path();
+		while (cmd->ret[0] == -1 && path[i])
+		{
+			cmd->ret[0] = 0;
+			tmp = join_path(cmd->exec, path[i]);
+			cmd->ret[0] = execve(tmp, cmd->args, g_envp);
+			if (cmd->ret[0] == 0)
+				exit(0);
+			i++;
+		}
+		return (0);
+	}
+	return (1);
 }

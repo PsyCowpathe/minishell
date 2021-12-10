@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 16:30:01 by agirona           #+#    #+#             */
-/*   Updated: 2021/11/30 18:27:51 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/10 18:52:00 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,9 @@ void	print_debug(t_inst *inst)
 		while (then->args[j])
 		{
 			if (j != 0)
-				ft_putstr("			");
+				ft_putstr(" 			|");
 			ft_putstr(then->args[j]);
+			ft_putchar('|');
 			ft_putchar('\n');
 			j++;
 		}

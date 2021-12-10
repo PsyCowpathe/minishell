@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:45:30 by agirona           #+#    #+#             */
-/*   Updated: 2021/11/30 18:27:48 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/10 20:17:18 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ typedef struct s_cmd
 	char			*exec;
 	int				echo_flag;
 	char			**args;
+	int				fd[2];
+	struct s_cmd	*prev;
 	struct s_cmd	*next;
 }				t_cmd;
 
@@ -82,6 +84,7 @@ void	exec_echo(t_cmd *cmd);
 
 char	**get_path(void);
 char	*join_path(char *exec, char *path);
-void	exec_path(t_cmd *cmd);
+void	exec_lonely_path(t_cmd *cmd);
+int		exec_path(t_cmd *cmd);
 
 #endif

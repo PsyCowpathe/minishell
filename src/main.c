@@ -6,55 +6,188 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:45:25 by agirona           #+#    #+#             */
-/*   Updated: 2021/11/30 18:27:53 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/10 19:12:54 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	exec_instruction(t_cmd *cmd)
+void	exec_lonely_instruction(t_cmd *cmd)
 {
-	pid_t	pid;
+	pid_t	cpid;
 
-	pid = fork();
-	if (pid == 0)
+	cpid = fork();
+	if (cpid == 0)
 	{
 		cmd->ret[0] = execve(cmd->exec, cmd->args, g_envp);
 		if (cmd->ret[0] == 0)
 			exit(0);
 	}
-	while ((wait(&pid)) > 0)
-		NULL;
+	while ((wait(&cpid)) > 0)
+		;
 	if (cmd->ret[0] == -1)
-		exec_path(cmd);
+		exec_lonely_path(cmd);
 }
 
-void	exec_line(t_inst *inst, char *input, int *i)
+int	exec_first(t_cmd *cmd)
+{
+	pid_t	cpid;
+
+	pipe(cmd->fd);
+	cpid = fork();
+	if (cpid == -1)
+	{
+		ft_putstr("Error: Fork creation  failed !\n");
+		return (0);
+	}
+	if (cpid == 0)
+	{
+		close(cmd->fd[0]);
+		dup2(cmd->fd[1], STDOUT_FILENO);
+		close(cmd->fd[1]);
+		if (cmd->builtin > 0)
+			;//simple->builtin();
+		else if (exec_path(cmd) == 0)
+		{
+			ft_putstr("Error: Incorrect command or path\n");
+			exit(0);
+		}
+		exit(0);
+	}
+	else
+	{
+		close(cmd->fd[1]);
+		while (wait(&cpid) > 0)
+			;
+	}
+	return (1);
+}
+
+int	exec_last(t_cmd *cmd)
+{
+	pid_t	cpid;
+
+	pipe(cmd->fd);
+	cpid = fork();
+	if (cpid == -1)
+	{
+		ft_putstr("Error: Fork creation  failed !\n");
+		return (0);
+	}
+	if (cpid == 0)
+	{
+		close(cmd->fd[0]);
+		close(cmd->fd[1]);
+		dup2(cmd->prev->fd[0], STDIN_FILENO);
+		close(cmd->prev->fd[0]);
+		if (cmd->builtin > 0)
+			;//simple->builtin();
+		else if (exec_path(cmd) == 0)
+		{
+			ft_putstr("Error: Incorrect command or path\n");
+			exit(0);
+		}
+		exit(0);
+	}
+	else
+	{
+		close(cmd->fd[0]);
+		close(cmd->fd[1]);
+		while (wait(&cpid) > 0)
+			;
+		close(cmd->prev->fd[0]);
+	}
+	return (1);
+}
+
+int	exec_mid(t_cmd *cmd)
+{
+	pid_t	cpid;
+
+	pipe(cmd->fd);
+	cpid = fork();
+	if (cpid == -1)
+	{
+		ft_putstr("Error: Fork creation  failed !\n");
+		return (0);
+	}
+	if (cpid == 0)
+	{
+		dup2(cmd->prev->fd[0], STDIN_FILENO);
+		close(cmd->prev->fd[0]);
+		dup2(cmd->fd[1], STDOUT_FILENO);
+		close(cmd->fd[1]);
+		if (cmd->builtin > 0)
+			;//simple->builtin();
+		else if (exec_path(cmd) == 0)
+		{
+			ft_putstr("Error: Incorrect command or path\n");
+			exit(0);
+		}
+		exit(0);
+	}
+	else
+	{
+		close(cmd->fd[1]);
+		close(cmd->prev->fd[0]);
+		while (wait(&cpid) > 0)
+			;
+	}
+	return (1);
+
+}
+
+void	exec_pipe(t_cmd	*cmd)
+{
+	exec_first(cmd);
+	cmd = cmd->next;
+	while (cmd->next)
+	{
+		exec_mid(cmd);
+		cmd = cmd->next;
+	}
+	exec_last(cmd);
+}
+
+void	cut_input(t_inst **inst, char *input, int *i)
 {
 	int		size;
 	char	*instruction;
 
+	while (ft_iswhitespace(input[*i]) == 1)
+		*i = *i + 1;
+	size = size_to_char(input, *i, ";");
+	if (size == -1)
+		return ;
+	if (new_malloc((void **)&instruction, sizeof(char), size + 1) == 0)
+		return ;
+	cpy_instruction(instruction, input, i, size);
+	*inst = instnew(ft_strdup(instruction));
+	free(instruction);
+	if (input[*i] == ';')
+		*i = *i + 1;
+}
+
+void	exec_line(t_inst *inst, char *input, int *i)
+{
 	while (input[*i])
 	{
-		while (ft_iswhitespace(input[*i]) == 1)
-			*i = *i + 1;
-		size = size_to_char(input, *i, ";");
-		if (size == -1)
-			return ;
-		if (new_malloc((void **)&instruction, sizeof(char), size + 1) == 0)
-			return ;
-		cpy_instruction(instruction, input, i, size);
-		inst = instnew(ft_strdup(instruction));
-		free(instruction);
-		if (input[*i] == ';')
-			*i = *i + 1;
+		cut_input(&inst, input, i);
 		cut_instruction(inst);
-		if (inst->cmds->builtin == 0)
-			exec_instruction(inst->cmds);
-		else if (inst->cmds->builtin == 2)
-			exec_echo(inst->cmds);
-		//print_debug(inst);
-		instclear(inst);
+								//print_debug(inst);
+		if (inst->cmds->next == NULL)
+		{
+			if (inst->cmds->builtin > 0)
+				;//simple_builtin();
+			else
+				exec_lonely_instruction(inst->cmds);
+			instclear(inst);
+		}
+		else
+		{
+			exec_pipe(inst->cmds);
+			instclear(inst);
+		}
 	}
 }
 

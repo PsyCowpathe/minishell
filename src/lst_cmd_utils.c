@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 17:49:26 by agirona           #+#    #+#             */
-/*   Updated: 2021/11/30 16:59:29 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/10 15:49:05 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ t_cmd	*cmdnew(char *content)
 	new->echo_flag = 0;
 	new->args = NULL;
 	new->next = NULL;
+	new->prev = NULL;
 	return (new);
 }
 
@@ -53,6 +54,7 @@ void	cmdadd_back(t_cmd **alst, t_cmd *new)
 	{
 		last = cmdlast(*alst);
 		last->next = new;
+		new->prev = last;
 	}
 }
 
