@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 16:30:01 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/11 12:52:52 by agoublai         ###   ########lyon.fr   */
+/*   Updated: 2021/12/13 19:23:19 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,17 @@ void	print_debug(t_inst *inst)
 		ft_putstr("		exec =  ");
 		ft_putstr(then->exec);
 		ft_putchar('\n');
-		ft_putstr("		redir_type =  ");
-		ft_putnbr(then->redir_type);
+		ft_putstr("		redir in type =  ");
+		ft_putnbr(then->redir_type[1]);
 		ft_putchar('\n');
-		ft_putstr("		redir path =  ");
-		ft_putstr(then->redir);
+		ft_putstr("		redir in path =  ");
+		ft_putstr(then->redir_in);
+		ft_putchar('\n');
+		ft_putstr("		redir out type =  ");
+		ft_putnbr(then->redir_type[0]);
+		ft_putchar('\n');
+		ft_putstr("		redir out path =  ");
+		ft_putstr(then->redir_out);
 		ft_putchar('\n');
 		if (then->echo_flag == 1)
 		{

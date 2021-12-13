@@ -6,14 +6,14 @@
 #    By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/24 18:29:21 by agirona           #+#    #+#              #
-#    Updated: 2021/12/11 11:54:07 by agoublai         ###   ########lyon.fr    #
+#    Updated: 2021/12/13 16:24:17 by agirona          ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
 SRCS = debug.c instruction.c lst_cmd_utils.c lst_inst_utils.c main.c utility.c \
-	   command.c command_utility.c builtin.c path.c
+	   command.c command_utility.c builtin.c path.c redirection.c
 
 SRCS_DIR = src
 

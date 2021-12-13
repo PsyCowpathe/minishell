@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:45:30 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/11 12:47:38 by agoublai         ###   ########lyon.fr   */
+/*   Updated: 2021/12/13 19:16:53 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,9 @@ typedef struct s_cmd
 	int				echo_flag;
 	char			**args;
 	int				fd[2];
-	int				redir_type;
-	char			*redir;
+	int				redir_type[2];
+	char			*redir_in;
+	char			*redir_out;
 	struct s_cmd	*prev;
 	struct s_cmd	*next;
 }				t_cmd;
@@ -90,5 +91,9 @@ char	**get_path(void);
 char	*join_path(char *exec, char *path);
 void	exec_lonely_path(t_cmd *cmd);
 int		exec_path(t_cmd *cmd);
+
+//redirection
+
+int		cut_redir(t_cmd *cmd, int *i);
 
 #endif
