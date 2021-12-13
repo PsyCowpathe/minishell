@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 16:35:29 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/10 18:56:33 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/12 10:50:25 by agoublai         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,9 @@ void	cut_exec(t_cmd *cmd, int *i)
 {
 	char	*fragment;
 	int		size;
+	
+	while (ft_iswhitespace(cmd->str[*i]))
+		(*i)++;
 	size = size_to_char(cmd->str, *i, " \r\n\v\t\f");
 	if (size == -1)
 		return ;
@@ -54,6 +57,8 @@ void	cut_exec(t_cmd *cmd, int *i)
 	cmd->exec = ft_strdup(fragment);
 	free(fragment);
 }
+
+void	cut_redir(t_cmd *cmd, int *i);
 
 void	get_args(t_cmd *cmd, int i)
 {
@@ -72,6 +77,7 @@ void	get_args(t_cmd *cmd, int i)
 		i++;
 	while (cmd->str[i])
 	{
+		cut_redir(cmd, &i);
 		while (ft_iswhitespace(cmd->str[i]) == 1)
 			i++;
 		size = size_to_char(cmd->str, i, " \r\n\v\t\f");
@@ -89,11 +95,63 @@ void	get_args(t_cmd *cmd, int i)
 	cmd->args[j] = NULL;
 }
 
+int		is_redir(t_cmd *cmd, int *i)
+{
+	int	ret;
+
+	ret = 0;
+	if (cmd->str[*i] == '<')
+	{
+		if (cmd->str[(*i) + 1] == '<' && ft_iswhitespace(cmd->str[(*i) + 2]))
+			ret = 1;
+		else if (ft_iswhitespace(cmd->str[(*i) + 1]))
+			ret = 2;
+	}
+	else if (cmd->str[*i] == '>')
+	{
+		if (cmd->str[(*i) + 1] == '>' && ft_iswhitespace(cmd->str[(*i) + 2]))
+			ret = 3;
+		else if (ft_iswhitespace(cmd->str[(*i) + 1]))
+			ret = 4;
+	}
+	return (ret);
+}
+
+void	cut_redir(t_cmd *cmd, int *i)
+{
+	int		size;
+	int		redir_type;
+	char	*fragment;
+
+	while (ft_iswhitespace(cmd->str[*i]) == 1)
+		(*i)++;
+	redir_type = is_redir(cmd, i);
+	if (redir_type > 0)
+	{
+		(*i) += (1 + redir_type % 2);
+		while (ft_iswhitespace(cmd->str[*i]) == 1)
+			(*i)++;
+		cmd->redir_type = redir_type;
+		size = size_to_char(cmd->str, *i, " \r\n\v\t\f");
+		if (size == -1)
+			return ;
+		fragment = malloc(sizeof(char) * (size + 1));
+		if (fragment == NULL)
+			return ;
+		cpy_instruction(fragment, cmd->str, i, size);
+		cmd->redir = ft_strdup(fragment);
+		free(fragment);
+	}
+}
+
 void	cut_command(t_cmd *cmd)
 {
 	int		i;
 
 	i = 0;
+	while (ft_iswhitespace(cmd->str[i]) == 1)
+		i++;
+	cut_redir(cmd, &i);
 	cut_exec(cmd, &i);
 	if (strcmp_quote(cmd->exec, "echo") == 1)
 		i = get_echo_flag(cmd, cmd->str, i);

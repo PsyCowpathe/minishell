@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:45:30 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/10 20:17:18 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/11 12:47:38 by agoublai         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,10 @@
 # include <stdio.h>
 # include "../libft/libft.h"
 # include <readline/readline.h>
+# include <readline/history.h>
+# include <sys/wait.h>
 
-char	*const *g_envp;
+extern char	*const *g_envp;
 
 typedef struct s_cmd
 {
@@ -28,6 +30,8 @@ typedef struct s_cmd
 	int				echo_flag;
 	char			**args;
 	int				fd[2];
+	int				redir_type;
+	char			*redir;
 	struct s_cmd	*prev;
 	struct s_cmd	*next;
 }				t_cmd;

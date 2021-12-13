@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   debug.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 16:30:01 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/10 18:52:00 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/11 12:52:52 by agoublai         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,12 @@ void	print_debug(t_inst *inst)
 		ft_putchar('\n');
 		ft_putstr("		exec =  ");
 		ft_putstr(then->exec);
+		ft_putchar('\n');
+		ft_putstr("		redir_type =  ");
+		ft_putnbr(then->redir_type);
+		ft_putchar('\n');
+		ft_putstr("		redir path =  ");
+		ft_putstr(then->redir);
 		ft_putchar('\n');
 		if (then->echo_flag == 1)
 		{

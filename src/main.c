@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:45:25 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/10 19:12:54 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/11 12:37:58 by agoublai         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	*const *g_envp = NULL;
 
 void	exec_lonely_instruction(t_cmd *cmd)
 {
@@ -174,7 +176,7 @@ void	exec_line(t_inst *inst, char *input, int *i)
 	{
 		cut_input(&inst, input, i);
 		cut_instruction(inst);
-								//print_debug(inst);
+								print_debug(inst);
 		if (inst->cmds->next == NULL)
 		{
 			if (inst->cmds->builtin > 0)

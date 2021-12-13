@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lst_utils.c                                        :+:      :+:    :+:   */
+/*   lst_cmd_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 17:49:26 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/10 15:49:05 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/12 10:47:43 by agoublai         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ t_cmd	*cmdnew(char *content)
 	new->exec = NULL;
 	new->echo_flag = 0;
 	new->args = NULL;
+	new->redir_type = 0;
+	new->redir = NULL;
 	new->next = NULL;
 	new->prev = NULL;
 	return (new);
