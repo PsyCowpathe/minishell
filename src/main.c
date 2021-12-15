@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:45:25 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/13 19:56:07 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/15 13:03:13 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,29 @@ char	*const *g_envp = NULL;
 void	exec_lonely_instruction(t_cmd *cmd)
 {
 	pid_t	cpid;
+	int		fd;
 
 	cpid = fork();
 	if (cpid == 0)
 	{
+		if (cmd->redir_type[1] == 2)
+		{
+			fd = open(cmd->redir_in, O_RDONLY);
+			dup2(fd, STDIN_FILENO);
+			close(fd);
+		}
+		if (cmd->redir_type[0] == 3)
+		{
+			fd = open(cmd->redir_out, O_WRONLY | O_CREAT | O_APPEND, 0644);
+			dup2(fd, STDOUT_FILENO);
+			close(fd);
+		}
+		else if (cmd->redir_type[0] == 4)
+		{
+			fd = open(cmd->redir_out, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			dup2(fd, STDOUT_FILENO);
+			close(fd);
+		}
 		cmd->ret[0] = execve(cmd->exec, cmd->args, g_envp);
 		if (cmd->ret[0] == 0)
 			exit(0);
@@ -34,6 +53,7 @@ void	exec_lonely_instruction(t_cmd *cmd)
 int	exec_first(t_cmd *cmd)
 {
 	pid_t	cpid;
+	int		fd;
 
 	pipe(cmd->fd);
 	cpid = fork();
@@ -45,6 +65,12 @@ int	exec_first(t_cmd *cmd)
 	if (cpid == 0)
 	{
 		close(cmd->fd[0]);
+		if (cmd->redir_type[1] == 2)
+		{
+			fd = open(cmd->redir_in, O_RDONLY);
+			dup2(fd, STDIN_FILENO);
+			close(fd);
+		}
 		dup2(cmd->fd[1], STDOUT_FILENO);
 		close(cmd->fd[1]);
 		if (cmd->builtin > 0)
@@ -68,6 +94,7 @@ int	exec_first(t_cmd *cmd)
 int	exec_last(t_cmd *cmd)
 {
 	pid_t	cpid;
+	int		fd;
 
 	pipe(cmd->fd);
 	cpid = fork();
@@ -80,7 +107,14 @@ int	exec_last(t_cmd *cmd)
 	{
 		close(cmd->fd[0]);
 		close(cmd->fd[1]);
-		dup2(cmd->prev->fd[0], STDIN_FILENO);
+		if (cmd->redir_type[1] == 2)
+		{
+			fd = open(cmd->redir_in, O_RDONLY);
+			dup2(fd, STDIN_FILENO);
+			close(fd);
+		}
+		else
+			dup2(cmd->prev->fd[0], STDIN_FILENO);
 		close(cmd->prev->fd[0]);
 		if (cmd->builtin > 0)
 			;//simple->builtin();
@@ -105,6 +139,7 @@ int	exec_last(t_cmd *cmd)
 int	exec_mid(t_cmd *cmd)
 {
 	pid_t	cpid;
+	int		fd;
 
 	pipe(cmd->fd);
 	cpid = fork();
@@ -115,7 +150,14 @@ int	exec_mid(t_cmd *cmd)
 	}
 	if (cpid == 0)
 	{
-		dup2(cmd->prev->fd[0], STDIN_FILENO);
+		if (cmd->redir_type[1] == 2)
+		{
+			fd = open(cmd->redir_in, O_RDONLY);
+			dup2(fd, STDIN_FILENO);
+			close(fd);
+		}
+		else
+			dup2(cmd->prev->fd[0], STDIN_FILENO);
 		close(cmd->prev->fd[0]);
 		dup2(cmd->fd[1], STDOUT_FILENO);
 		close(cmd->fd[1]);

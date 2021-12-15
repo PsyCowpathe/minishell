@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 16:35:29 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/13 19:56:07 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/15 13:33:04 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ void	get_args(t_cmd *cmd, int i)
 {
 	int		j;
 	int		size;
+	char	*tmp;
 
 	cmd->args = malloc(sizeof(char *) * (count_args(cmd->str, i) + 2));
 	if (cmd->args == NULL)
@@ -85,10 +86,11 @@ void	get_args(t_cmd *cmd, int i)
 			cmd->args[j] = NULL;
 			return ;
 		}
-		cmd->args[j] = malloc(sizeof(char) * size);
-		if (cmd->args[j] == NULL)
+		tmp = malloc(sizeof(char) * size + 1);
+		if (tmp == NULL)
 			return ;
-		cpy_instruction(cmd->args[j], cmd->str, &i, size);
+		cpy_instruction(tmp, cmd->str, &i, size + 1);
+		cmd->args[j] = ft_strdup(tmp);
 		j++;
 	}
 	cmd->args[j] = NULL;

@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 19:06:46 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/13 19:56:05 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/15 13:30:09 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,12 +67,13 @@ int	cut_redir(t_cmd *cmd, int *i)
 	int		size;
 	int		redir_type;
 	char	*fragment;
+	int		fd;
 
 	while (ft_iswhitespace(cmd->str[*i]) == 1)
 		(*i)++;
 	redir_type = is_redir(cmd, *i);
 	if (redir_type > 0)
-	{
+	{	
 		(*i) += (1 + redir_type % 2);
 		while (ft_iswhitespace(cmd->str[*i]) == 1)
 			(*i)++;
@@ -87,6 +88,12 @@ int	cut_redir(t_cmd *cmd, int *i)
 		if (fragment == NULL)
 			return (-1);
 		cpy_instruction(fragment, cmd->str, i, size);
+		ft_putstr("frag = ");
+		ft_putstr(fragment);
+		ft_putstr("enter = ");
+		ft_putstr(cmd->args[1]);
+		ft_putchar('\n');
+
 		if ((redir_type - 1) / 2 == 0)	
 		{
 			if (cmd->redir_in)
@@ -94,11 +101,13 @@ int	cut_redir(t_cmd *cmd, int *i)
 			cmd->redir_in = ft_strdup(fragment);
 			if (redir_type == 2)
 			{
-				if (open(cmd->redir_in, O_RDONLY, 0644) == -1)
+				fd = open(cmd->redir_in, O_RDONLY, 0644);
+				if (fd != -1)
 				{
 					ft_putstr("Error: j'ai pas les droit de lecture ou alors il existe pas ton fichier frero");
 					return (-5);
 				}
+				close(fd);
 			}
 			else
 				ft_putstr("HEREDOC"); //ON LE FAIT OU PAS ?
@@ -110,23 +119,30 @@ int	cut_redir(t_cmd *cmd, int *i)
 			cmd->redir_out = ft_strdup(fragment);
 			if (redir_type == 3)
 			{
-				if (open(cmd->redir_out, O_WRONLY | O_CREAT | O_APPEND, 0644) == -1)
+				fd = open(cmd->redir_out, O_WRONLY | O_CREAT | O_APPEND, 0644);
+				if (fd == -1)
 				{
 					ft_putstr("Error: J'ai po reussi a creer :(");
 					return (-3);
 				}
+				close(fd);
 			}
 			else
 			{
-				if (open(cmd->redir_out, O_WRONLY | O_CREAT | O_TRUNC, 0644) == -1)
+				fd = open(cmd->redir_out, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+				if (fd == -1)
 				{
 					ft_putstr("Error: J'ai pas reussi a creer");
 					return (-18);
 				}
+				close(fd);
 			}
 
 		}
 		free(fragment);
+		ft_putstr("final = ");
+		ft_putstr(cmd->args[1]);
+		ft_putchar('\n');
 		return (1);
 	}
 	return (0);
