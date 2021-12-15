@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 16:35:29 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/15 17:13:16 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/15 20:28:45 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,31 +58,31 @@ void	cut_exec(t_cmd *cmd, int *i)
 	free(fragment);
 }
 
-void	get_args(t_cmd *cmd, int i)
+int		get_args(t_cmd *cmd, int i)
 {
 	int		j;
 	int		size;
 	char	*tmp;
 	int		ret;
 
-	ret = 1;
 	cmd->args = malloc(sizeof(char *) * (count_args(cmd->str, i) + 2));
 	if (cmd->args == NULL)
-		return ;
+		return (0);
 	j = 1;
 	cmd->args[0] = malloc(sizeof(char) * 1); 
 	if (cmd->args[0] == NULL)
-		return ;
+		return (-1);
 	cmd->args[0][0] = '\0';
 	while (ft_iswhitespace(cmd->str[i]) == 1)
 		i++;
 	while (cmd->str[i])
 	{
+		ret = 1;
 		while (cmd->str[i] && ret == 1)
 		{
 			ret = cut_redir(cmd, &i);
 			if (ret < 0)
-				return ;
+				return (0);
 		}
 		while (ft_iswhitespace(cmd->str[i]) == 1)
 			i++;
@@ -90,16 +90,17 @@ void	get_args(t_cmd *cmd, int i)
 		if (size == 0)
 		{
 			cmd->args[j] = NULL;
-			return ;
+			return (-1);
 		}
 		tmp = malloc(sizeof(char) * size + 1);
 		if (tmp == NULL)
-			return ;
+			return (-1);
 		cpy_instruction(tmp, cmd->str, &i, size + 1);
 		cmd->args[j] = ft_strdup(tmp);
 		j++;
 	}
 	cmd->args[j] = NULL;
+	return (1);
 }
 
 int	cut_command(t_cmd *cmd)
@@ -121,6 +122,8 @@ int	cut_command(t_cmd *cmd)
 	if (strcmp_quote(cmd->exec, "echo") == 1)
 		i = get_echo_flag(cmd, cmd->str, i);
 	cmd->builtin = is_builtin(cmd);
-	get_args(cmd, i);
+	if (get_args(cmd, i) <= 0)
+		return (0);
+	cmd->is_valid = 1;
 	return (1);
 }

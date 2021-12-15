@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 16:28:37 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/15 17:13:17 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/15 20:28:44 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	cpy_instruction(char *dst, char *src, int *start, int size)
 
 	end = *start + size;
 	i = 0;
-	while (*start < end)
+	while (src[*start] && *start < end)
 	{
 		dst[i] = src[*start];
 		i++;
@@ -49,7 +49,6 @@ void	cut_instruction(t_inst *inst)
 		free(command);
 		if (inst->str[i] == '|')
 			i++;
-		if (cut_command(cmdlast(inst->cmds)) == 1)
-			inst->cmds->is_valid = 1;
+		cut_command(cmdlast(inst->cmds));
 	}
 }

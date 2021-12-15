@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 17:49:26 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/15 17:13:17 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/15 20:28:43 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ t_cmd	*cmdnew(char *content)
 	new->redir_out = NULL;
 	new->next = NULL;
 	new->prev = NULL;
+	new->fd[0] = -1;
+	new->fd[1] = -1;
 	return (new);
 }
 

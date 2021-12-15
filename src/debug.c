@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 16:30:01 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/13 19:28:07 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/15 20:28:46 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,9 @@ void	print_debug(t_inst *inst)
 	while (then)
 	{
 		j = 0;
+		ft_putstr("		valid = ");
+		ft_putnbr(then->is_valid);
+		ft_putchar('\n');
 		ft_putstr("		command = ");
 		ft_putstr(then->str);
 		ft_putchar('\n');
@@ -51,7 +54,7 @@ void	print_debug(t_inst *inst)
 			ft_putchar('\n');
 		}
 		ft_putstr("		args =  ");
-		while (then->args[j])
+		while (then->args[j] && then->is_valid == 1)
 		{
 			if (j != 0)
 				ft_putstr(" 			|");
@@ -61,6 +64,8 @@ void	print_debug(t_inst *inst)
 			j++;
 		}
 		then = then->next;
+		ft_putchar('\n');
+		ft_putchar('\n');
 	}
 	ft_putchar('\n');
 }

@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 19:06:46 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/15 17:13:15 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/15 20:28:45 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int		is_redir(t_cmd *cmd, int i)
 	}
 	while (ft_iswhitespace(cmd->str[i]) == 1)
 		i++;
-	if (!cmd->str[i])
+		if (!cmd->str[i])
 	{
 		ft_putstr("Error: redirection\n");
 		return (-3);

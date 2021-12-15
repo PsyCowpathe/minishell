@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:45:25 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/15 17:13:18 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/15 20:28:42 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@ void	exec_lonely_instruction(t_cmd *cmd)
 	pid_t	cpid;
 	int		fd;
 
+	ft_putstr("lonely");
+	if (cmd->is_valid != 1)
+		return ;
 	cpid = fork();
 	if (cpid == 0)
 	{
@@ -54,6 +57,7 @@ int	exec_first(t_cmd *cmd)
 	pid_t	cpid;
 	int		fd;
 
+	ft_putstr("first");
 	pipe(cmd->fd);
 	cpid = fork();
 	if (cpid == -1)
@@ -75,10 +79,7 @@ int	exec_first(t_cmd *cmd)
 		if (cmd->builtin > 0)
 			;//simple->builtin();
 		else if (exec_path(cmd) == 0)
-		{
 			ft_putstr("Error: Incorrect command or path\n");
-			exit(0);
-		}
 		exit(0);
 	}
 	else
@@ -118,10 +119,7 @@ int	exec_last(t_cmd *cmd)
 		if (cmd->builtin > 0)
 			;//simple->builtin();
 		else if (exec_path(cmd) == 0)
-		{
 			ft_putstr("Error: Incorrect command or path\n");
-			exit(0);
-		}
 		exit(0);
 	}
 	else
@@ -140,6 +138,7 @@ int	exec_mid(t_cmd *cmd)
 	pid_t	cpid;
 	int		fd;
 
+	ft_putstr("mid");
 	pipe(cmd->fd);
 	cpid = fork();
 	if (cpid == -1)
@@ -163,10 +162,7 @@ int	exec_mid(t_cmd *cmd)
 		if (cmd->builtin > 0)
 			;//simple->builtin();
 		else if (exec_path(cmd) == 0)
-		{
 			ft_putstr("Error: Incorrect command or path\n");
-			exit(0);
-		}
 		exit(0);
 	}
 	else
@@ -182,14 +178,19 @@ int	exec_mid(t_cmd *cmd)
 
 void	exec_pipe(t_cmd	*cmd)
 {
-	exec_first(cmd);
+	if (cmd->is_valid == 1)
+	{
+		exec_first(cmd);
+	}
 	cmd = cmd->next;
 	while (cmd->next)
 	{
-		exec_mid(cmd);
+		if (cmd->is_valid == 1)
+			exec_mid(cmd);
 		cmd = cmd->next;
 	}
-	exec_last(cmd);
+	if (cmd->is_valid == 1)
+		exec_last(cmd);
 }
 
 void	cut_input(t_inst **inst, char *input, int *i)
@@ -217,25 +218,22 @@ void	exec_line(t_inst *inst, char *input, int *i)
 	{
 		cut_input(&inst, input, i);
 		cut_instruction(inst);
-			print_debug(inst); //delete
-		if (inst->cmds->is_valid == 1)
+		print_debug(inst); //delete
+		if (inst->cmds->next == NULL)
 		{
-			if (inst->cmds->next == NULL)
+			if (inst->cmds->builtin > 0)
 			{
-				if (inst->cmds->builtin > 0)
-				{
-					ft_putstr("c'est pas imped menther du con\n");
-					;//simple_builtin();
-				}
-				else
-					exec_lonely_instruction(inst->cmds);
-				instclear(inst);
+				ft_putstr("c'est pas imped menther du con\n");
+				;//simple_builtin();
 			}
 			else
-			{
-				exec_pipe(inst->cmds);
-				instclear(inst);
-			}
+				exec_lonely_instruction(inst->cmds);
+			instclear(inst);
+		}
+		else
+		{
+			exec_pipe(inst->cmds);
+			instclear(inst);
 		}
 	}
 }
