@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:45:30 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/15 13:34:56 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/15 17:13:16 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ extern char	*const *g_envp;
 
 typedef struct s_cmd
 {
+	int				is_valid;
 	int				*ret;
 	int				builtin;
 	char			*str;
@@ -51,7 +52,7 @@ void	cut_instruction(t_inst *inst);
 
 //command
 
-void	cut_command(t_cmd *cmd);
+int		cut_command(t_cmd *cmd);
 
 // lst_inst_utils
 

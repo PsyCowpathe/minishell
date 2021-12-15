@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 16:35:29 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/15 13:34:57 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/15 17:13:16 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,9 @@ void	get_args(t_cmd *cmd, int i)
 	int		j;
 	int		size;
 	char	*tmp;
+	int		ret;
 
+	ret = 1;
 	cmd->args = malloc(sizeof(char *) * (count_args(cmd->str, i) + 2));
 	if (cmd->args == NULL)
 		return ;
@@ -76,8 +78,12 @@ void	get_args(t_cmd *cmd, int i)
 		i++;
 	while (cmd->str[i])
 	{
-		while (cut_redir(cmd, &i))
-			;
+		while (cmd->str[i] && ret == 1)
+		{
+			ret = cut_redir(cmd, &i);
+			if (ret < 0)
+				return ;
+		}
 		while (ft_iswhitespace(cmd->str[i]) == 1)
 			i++;
 		size = size_to_char(cmd->str, i, " \r\n\v\t\f");
@@ -96,18 +102,25 @@ void	get_args(t_cmd *cmd, int i)
 	cmd->args[j] = NULL;
 }
 
-void	cut_command(t_cmd *cmd)
+int	cut_command(t_cmd *cmd)
 {
 	int		i;
+	int		ret;
 
 	i = 0;
+	ret = 1;
 	while (ft_iswhitespace(cmd->str[i]) == 1)
 		i++;
-	while (cut_redir(cmd, &i))
-		;
+	while (cmd->str[i] && ret == 1)
+	{
+		ret = cut_redir(cmd, &i);
+		if (ret < 0)
+			return (0);
+	}
 	cut_exec(cmd, &i);
 	if (strcmp_quote(cmd->exec, "echo") == 1)
 		i = get_echo_flag(cmd, cmd->str, i);
 	cmd->builtin = is_builtin(cmd);
 	get_args(cmd, i);
+	return (1);
 }

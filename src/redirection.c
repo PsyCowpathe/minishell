@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 19:06:46 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/15 13:34:55 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/15 17:13:15 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,22 +27,27 @@ int		is_redir(t_cmd *cmd, int i)
 			c = cmd->str[i];
 		if (cmd->str[i] != c)
 		{
-			ft_putstr("Error: redirection");
+			ft_putstr("Error: redirection\n");
 			return (-1);
 		}
 		if (i >= save + 3)
 		{
-			ft_putstr("Error: redirection");
+			ft_putstr("Error: redirection\n");
 			return (-2);
 		}
 		i++;
 	}
 	while (ft_iswhitespace(cmd->str[i]) == 1)
 		i++;
+	if (!cmd->str[i])
+	{
+		ft_putstr("Error: redirection\n");
+		return (-3);
+	}
 	if (ft_ischar("><", cmd->str[i]) == 1)
 	{
-			ft_putstr("Error: redirection");
-			return (-3);
+			ft_putstr("Error: redirection\n");
+			return (-4);
 	}
 	i = save;
 	if (cmd->str[i] == '<')
@@ -88,12 +93,6 @@ int	cut_redir(t_cmd *cmd, int *i)
 		if (fragment == NULL)
 			return (-1);
 		cpy_instruction(fragment, cmd->str, i, size);
-		ft_putstr("frag = ");
-		ft_putstr(fragment);
-		ft_putstr("enter = ");
-		ft_putstr(cmd->args[1]);
-		ft_putchar('\n');
-
 		if ((redir_type - 1) / 2 == 0)	
 		{
 			if (cmd->redir_in)
@@ -102,9 +101,9 @@ int	cut_redir(t_cmd *cmd, int *i)
 			if (redir_type == 2)
 			{
 				fd = open(cmd->redir_in, O_RDONLY, 0644);
-				if (fd != -1)
+				if (fd == -1)
 				{
-					ft_putstr("Error: j'ai pas les droit de lecture ou alors il existe pas ton fichier frero");
+					ft_putstr("Error: j'ai pas les droit de lecture ou alors il existe pas ton fichier frero\n");
 					return (-5);
 				}
 				close(fd);
@@ -122,7 +121,7 @@ int	cut_redir(t_cmd *cmd, int *i)
 				fd = open(cmd->redir_out, O_WRONLY | O_CREAT | O_APPEND, 0644);
 				if (fd == -1)
 				{
-					ft_putstr("Error: J'ai po reussi a creer :(");
+					ft_putstr("Error: J'ai po reussi a creer :(\n");
 					return (-3);
 				}
 				close(fd);
@@ -132,7 +131,7 @@ int	cut_redir(t_cmd *cmd, int *i)
 				fd = open(cmd->redir_out, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 				if (fd == -1)
 				{
-					ft_putstr("Error: J'ai pas reussi a creer");
+					ft_putstr("Error: J'ai pas reussi a creer\n");
 					return (-18);
 				}
 				close(fd);
@@ -140,9 +139,6 @@ int	cut_redir(t_cmd *cmd, int *i)
 
 		}
 		free(fragment);
-		ft_putstr("final = ");
-		ft_putstr(cmd->args[1]);
-		ft_putchar('\n');
 		return (1);
 	}
 	return (0);

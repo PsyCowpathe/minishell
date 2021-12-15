@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 16:28:37 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/15 13:34:58 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/15 17:13:17 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ void	cut_instruction(t_inst *inst)
 		free(command);
 		if (inst->str[i] == '|')
 			i++;
-		cut_command(cmdlast(inst->cmds));
+		if (cut_command(cmdlast(inst->cmds)) == 1)
+			inst->cmds->is_valid = 1;
 	}
 }

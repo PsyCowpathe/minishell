@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:45:25 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/15 13:34:59 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/15 17:13:18 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,12 @@ void	exec_lonely_instruction(t_cmd *cmd)
 			close(fd);
 		}
 		cmd->ret[0] = execve(cmd->exec, cmd->args, g_envp);
-		if (cmd->ret[0] == 0)
-			exit(0);
+		if (cmd->ret[0] == -1)
+			exec_lonely_path(cmd);
+		exit(0);
 	}
-	while ((wait(&cpid)) > 0)
+	while (wait(&cpid) > 0)
 		;
-	if (cmd->ret[0] == -1)
-		exec_lonely_path(cmd);
 }
 
 int	exec_first(t_cmd *cmd)
@@ -218,19 +217,25 @@ void	exec_line(t_inst *inst, char *input, int *i)
 	{
 		cut_input(&inst, input, i);
 		cut_instruction(inst);
-								print_debug(inst);
-		if (inst->cmds->next == NULL)
+			print_debug(inst); //delete
+		if (inst->cmds->is_valid == 1)
 		{
-			if (inst->cmds->builtin > 0)
-				;//simple_builtin();
+			if (inst->cmds->next == NULL)
+			{
+				if (inst->cmds->builtin > 0)
+				{
+					ft_putstr("c'est pas imped menther du con\n");
+					;//simple_builtin();
+				}
+				else
+					exec_lonely_instruction(inst->cmds);
+				instclear(inst);
+			}
 			else
-				exec_lonely_instruction(inst->cmds);
-			instclear(inst);
-		}
-		else
-		{
-			exec_pipe(inst->cmds);
-			instclear(inst);
+			{
+				exec_pipe(inst->cmds);
+				instclear(inst);
+			}
 		}
 	}
 }

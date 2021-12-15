@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 17:49:26 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/13 19:56:05 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/15 17:13:17 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ t_cmd	*cmdnew(char *content)
 	new->ret = malloc(4);
 	if (new->ret == NULL)
 		return (NULL);
+	new->is_valid = 0;
 	new->ret[0] = 0;
 	new->builtin = 0;
 	new->str = content;
