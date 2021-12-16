@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:45:30 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/16 13:32:25 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/16 16:15:31 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,5 +102,21 @@ int		cut_redir(t_cmd *cmd, int *i);
 //open
 
 int	verif_open(t_cmd *cmd, char *fragment, int redir_type);
+
+//input_output
+
+int		create_output_redirection(t_cmd *cmd);
+int		create_input_redirection(t_cmd *cmd);
+
+//exec
+
+void	exec_pipe(t_cmd	*cmd);
+void	exec_lonely(t_cmd *cmd);
+
+//child
+
+void	first_child(t_cmd *cmd);
+void	last_child(t_cmd *cmd);
+void	perfect_child(t_cmd *cmd);
 
 #endif
