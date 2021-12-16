@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:45:30 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/16 16:15:31 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/16 20:29:31 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ typedef struct s_cmd
 	char			**args;
 	int				fd[2];
 	int				redir_type[2];
+	int				hdoc_fd;
 	char			*redir_in;
 	char			*redir_out;
 	struct s_cmd	*prev;
@@ -47,7 +48,7 @@ typedef struct s_inst
 
 // instruction
 
-void	cut_instruction(t_inst *inst);
+int		cut_instruction(t_inst *inst);
 
 //command
 

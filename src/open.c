@@ -6,11 +6,23 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 12:36:27 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/16 16:15:28 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/16 20:29:30 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	verif_open_heredoc(void)
+{
+	int		fd;
+
+	fd = open(".heredoc.tmp", O_WRONLY, 0644);
+	if (fd != -1)
+	{
+		close(fd);
+		unlink(".heredoc.tmp");
+	}
+}
 
 int	verif_open_in(t_cmd *cmd, char *fragment, int redir_type)
 {
@@ -25,13 +37,14 @@ int	verif_open_in(t_cmd *cmd, char *fragment, int redir_type)
 		fd = open(cmd->redir_in, O_RDONLY, 0644);
 		if (fd == -1)
 		{
-			ft_putstr("Error: j'ai pas les droit de lecture ou alors il existe pas ton fichier frero\n");
+			ft_putstr("Error: j'ai pas les droit de lecture ou alors");
+			ft_putstr(" il existe pas ton fichier frero\n");
 			return (-1);
 		}
 		close(fd);
 	}
 	else
-		ft_putstr("HEREDOC"); //ON LE FAIT OU PAS ?
+		verif_open_heredoc();
 	return (1);
 }
 
@@ -69,7 +82,7 @@ int	verif_open(t_cmd *cmd, char *fragment, int redir_type)
 {
 	int		ret;
 
-	if ((redir_type - 1) / 2 == 0)	
+	if ((redir_type - 1) / 2 == 0)
 	{
 		if (verif_open_in(cmd, fragment, redir_type) == -1)
 			return (-5);

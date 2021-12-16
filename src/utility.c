@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 16:30:33 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/16 13:32:22 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/16 20:02:37 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,8 @@ int	size_to_char(char *input, int i, char *find)
 			}
 			i++;
 			size++;
-			while (input[i] && input[i] != c)
-			{
-				i++;
+			while (input[i] && input[i] != c && ++i)
 				size++;
-			}
 		}
 		size++;
 		i++;

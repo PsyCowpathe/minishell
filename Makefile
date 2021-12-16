@@ -6,7 +6,7 @@
 #    By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/24 18:29:21 by agirona           #+#    #+#              #
-#    Updated: 2021/12/16 16:12:16 by agirona          ###   ########lyon.fr    #
+#    Updated: 2021/12/16 16:21:22 by agirona          ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,7 @@ INC	= include
 
 LIBRARY = libft/libft.a
 
-CFLAGS	= -Wall -Wextra -Werror -I $(INC)
+CFLAGS	= -fsanitize=address -Wall -Wextra -Werror -I $(INC)
 
 RLIB	= -L/usr/lib/ -lreadline
 
@@ -41,7 +41,7 @@ lib:
 			make -C ./libft/
 
 $(NAME) :	$(OBJS_PATH)
-			gcc $(FRAMEWORK) $(OBJS_PATH) $(LIBRARY) $(RLIB) -o $(NAME)
+			gcc       $(CFLAGS)     $(FRAMEWORK) $(OBJS_PATH) $(LIBRARY) $(RLIB) -o $(NAME)
 
 create_obj_dir :
 			rm -f obj || true

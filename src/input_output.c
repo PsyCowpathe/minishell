@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 16:11:08 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/16 16:15:27 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/16 20:29:20 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 int	create_input_redirection(t_cmd *cmd)
 {
 	int		fd;
+	char	*input;
 
 	if (cmd->redir_type[1] == 2)
 	{
@@ -22,6 +23,22 @@ int	create_input_redirection(t_cmd *cmd)
 		dup2(fd, STDIN_FILENO);
 		close(fd);
 		return (1);
+	}
+	else if (cmd->redir_type[1] == 1)
+	{
+		fd = open(".heredoc.tmp", O_WRONLY | O_CREAT | O_APPEND, 0644);
+		input = readline("> ");
+		while (ft_strcmp(input, cmd->redir_in) != 0)
+		{
+			write(fd, input, ft_strlen(input));
+			write(fd, "\n", 1);
+			input = readline("> ");
+		}
+		close(fd);
+		fd = open(".heredoc.tmp", O_RDONLY, 0644);
+		dup2(fd, STDIN_FILENO);
+		close(fd);
+		unlink(".heredoc.tmp");
 	}
 	return (0);
 }

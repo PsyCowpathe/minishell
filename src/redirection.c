@@ -6,13 +6,13 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 19:06:46 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/16 16:15:29 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/16 20:29:30 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		check_redirection(t_cmd *cmd, int i)
+int	check_redirection(t_cmd *cmd, int i)
 {
 	int		save;
 	char	c;
@@ -50,29 +50,27 @@ int		check_redirection(t_cmd *cmd, int i)
 	return (1);
 }
 
-int		is_redir(t_cmd *cmd, int i)
+int	is_redir(t_cmd *cmd, int i, int	*ret)
 {
-	int		ret;
-
-	ret = check_redirection(cmd, i); 
-	if (ret != 1)
-		return (ret);
-	ret = 0;
+	*ret = check_redirection(cmd, i);
+	if (*ret != 1)
+		return (*ret);
+	*ret = 0;
 	if (cmd->str[i] == '<')
 	{
 		if (cmd->str[i + 1] == '<')
-			ret = 1;
+			*ret = 1;
 		else
-			ret = 2;
+			*ret = 2;
 	}
 	else if (cmd->str[i] == '>')
 	{
 		if (cmd->str[i + 1] == '>')
-			ret = 3;
+			*ret = 3;
 		else
-			ret = 4;
+			*ret = 4;
 	}
-	return (ret);
+	return (*ret);
 }
 
 int	cut_redir(t_cmd *cmd, int *i)
@@ -83,8 +81,7 @@ int	cut_redir(t_cmd *cmd, int *i)
 
 	while (ft_iswhitespace(cmd->str[*i]) == 1)
 		(*i)++;
-	redir_type = is_redir(cmd, *i);
-	if (redir_type > 0)
+	if (is_redir(cmd, *i, &redir_type) > 0)
 	{	
 		(*i) += (1 + redir_type % 2);
 		while (ft_iswhitespace(cmd->str[*i]) == 1)

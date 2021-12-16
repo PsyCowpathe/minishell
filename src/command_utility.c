@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/29 16:57:58 by agirona           #+#    #+#             */
-/*   Updated: 2021/11/30 18:27:50 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/16 17:03:24 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,8 @@ int	strcmp_quote(char *str, char *find)
 	i = 0;
 	trigger = 0;
 	c = 0;
-	if (str[i] == '"' || str[i] == '\'')
+	if ((str[i] == '"' || str[i] == '\'') && ++trigger)
 	{
-		trigger++;
 		c = str[i];
 		while (str[i] == c)
 			i++;
@@ -32,15 +31,10 @@ int	strcmp_quote(char *str, char *find)
 	d = 0;
 	while (str[i] && find[d])
 	{
-		if (str[i] != find[d])
+		if (str[i++] != find[d++])
 			return (0);
-		i++;
-		d++;
-		while (str[i] && str[i] == c)
-		{
-			trigger++;
+		while (str[i] && str[i] == c && ++trigger)
 			i++;
-		}
 	}
 	if ((trigger % 2 == 0 && ft_iswhitespace(str[i]) == 1) || str[i] == '\0')
 		return (1);

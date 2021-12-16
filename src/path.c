@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/30 18:26:48 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/10 19:12:03 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/16 20:02:36 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ char	**get_path(void)
 			count++;
 		d++;
 	}
-	res = malloc(sizeof(char *) * count + 1);
+	res = malloc(sizeof(char *) * (count + 1));
 	if (res == NULL)
 		return (NULL);
 	d = 5;
@@ -93,6 +93,8 @@ void	exec_lonely_path(t_cmd *cmd)
 			;
 		i++;
 	}
+	if (cmd->ret[0] == -1)
+		ft_putstr("Error: command not found\n");
 }
 
 int		exec_path(t_cmd *cmd)
