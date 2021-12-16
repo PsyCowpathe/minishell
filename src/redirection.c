@@ -6,21 +6,19 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 19:06:46 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/15 20:28:45 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/16 13:32:26 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		is_redir(t_cmd *cmd, int i)
+int		check_redirection(t_cmd *cmd, int i)
 {
-	int		ret;
 	int		save;
 	char	c;
 
-	ret = 0;
-	save = i;
 	c = '\0';
+	save = i;
 	while (ft_ischar("><", cmd->str[i]) == 1)
 	{
 		if (i == save)
@@ -39,17 +37,27 @@ int		is_redir(t_cmd *cmd, int i)
 	}
 	while (ft_iswhitespace(cmd->str[i]) == 1)
 		i++;
-		if (!cmd->str[i])
+	if (!cmd->str[i])
 	{
 		ft_putstr("Error: redirection\n");
 		return (-3);
 	}
 	if (ft_ischar("><", cmd->str[i]) == 1)
 	{
-			ft_putstr("Error: redirection\n");
-			return (-4);
+		ft_putstr("Error: redirection\n");
+		return (-4);
 	}
-	i = save;
+	return (1);
+}
+
+int		is_redir(t_cmd *cmd, int i)
+{
+	int		ret;
+
+	ret = check_redirection(cmd, i); 
+	if (ret != 1)
+		return (ret);
+	ret = 0;
 	if (cmd->str[i] == '<')
 	{
 		if (cmd->str[i + 1] == '<')
@@ -69,10 +77,9 @@ int		is_redir(t_cmd *cmd, int i)
 
 int	cut_redir(t_cmd *cmd, int *i)
 {
-	int		size;
 	int		redir_type;
 	char	*fragment;
-	int		fd;
+	int		ret;
 
 	while (ft_iswhitespace(cmd->str[*i]) == 1)
 		(*i)++;
@@ -86,58 +93,12 @@ int	cut_redir(t_cmd *cmd, int *i)
 			cmd->redir_type[1] = redir_type;
 		else
 			cmd->redir_type[0] = redir_type;
-		size = size_to_char(cmd->str, *i, " \r\n\v\t\f");
-		if (size == -1)
-			return (-14);
-		fragment = malloc(sizeof(char) * (size + 1));
-		if (fragment == NULL)
-			return (-1);
-		cpy_instruction(fragment, cmd->str, i, size);
-		if ((redir_type - 1) / 2 == 0)	
-		{
-			if (cmd->redir_in)
-				free(cmd->redir_in);
-			cmd->redir_in = ft_strdup(fragment);
-			if (redir_type == 2)
-			{
-				fd = open(cmd->redir_in, O_RDONLY, 0644);
-				if (fd == -1)
-				{
-					ft_putstr("Error: j'ai pas les droit de lecture ou alors il existe pas ton fichier frero\n");
-					return (-5);
-				}
-				close(fd);
-			}
-			else
-				ft_putstr("HEREDOC"); //ON LE FAIT OU PAS ?
-		}
-		else
-		{
-			if (cmd->redir_out)
-				free(cmd->redir_out);
-			cmd->redir_out = ft_strdup(fragment);
-			if (redir_type == 3)
-			{
-				fd = open(cmd->redir_out, O_WRONLY | O_CREAT | O_APPEND, 0644);
-				if (fd == -1)
-				{
-					ft_putstr("Error: J'ai po reussi a creer :(\n");
-					return (-3);
-				}
-				close(fd);
-			}
-			else
-			{
-				fd = open(cmd->redir_out, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-				if (fd == -1)
-				{
-					ft_putstr("Error: J'ai pas reussi a creer\n");
-					return (-18);
-				}
-				close(fd);
-			}
-
-		}
+		ret = cpy_size_to_char(&fragment, cmd->str, i, " \r\n\v\t\f");
+		if (ret != 1)
+			return (ret);
+		ret = verif_open(cmd, fragment, redir_type);
+		if (ret != 1)
+			return (ret);
 		free(fragment);
 		return (1);
 	}

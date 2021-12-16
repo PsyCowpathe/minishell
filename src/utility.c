@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 16:30:33 by agirona           #+#    #+#             */
-/*   Updated: 2021/11/30 16:59:28 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/16 13:32:22 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,4 +55,34 @@ int	size_to_char(char *input, int i, char *find)
 		i++;
 	}
 	return (size);
+}
+
+void	cpy_instruction(char *dst, char *src, int *start, int size)
+{
+	int		end;
+	int		i;
+
+	end = *start + size;
+	i = 0;
+	while (src[*start] && *start < end)
+	{
+		dst[i] = src[*start];
+		i++;
+		*start = *start + 1;
+	}
+	dst[i] = '\0';
+}
+
+int	cpy_size_to_char(char **dst, char *src, int *start, char *search)
+{
+	int		size;
+
+	size = size_to_char(src, *start, search);
+	if (size == -1)
+		return (-14);
+	*dst = malloc(sizeof(char) * (size + 1));
+	if (*dst == NULL)
+		return (-1);
+	cpy_instruction(*dst, src, start, size);
+	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 16:35:29 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/15 20:28:45 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/16 13:32:22 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	get_echo_flag(t_cmd *cmd, char *str, int i)
 	if (str[i] == '-' && str[i + 1] == 'n')
 	{
 		if ((quote && str[i + 2] == quote) || (quote == 0 && (str[i + 2] == '\0'
-						|| ft_iswhitespace(str[i + 2]) == 1)))
+					|| ft_iswhitespace(str[i + 2]) == 1)))
 		{
 			cmd->echo_flag = 1;
 			if (quote)
@@ -44,7 +44,7 @@ void	cut_exec(t_cmd *cmd, int *i)
 {
 	char	*fragment;
 	int		size;
-	
+
 	while (ft_iswhitespace(cmd->str[*i]))
 		(*i)++;
 	size = size_to_char(cmd->str, *i, " \r\n\v\t\f");
@@ -58,18 +58,43 @@ void	cut_exec(t_cmd *cmd, int *i)
 	free(fragment);
 }
 
-int		get_args(t_cmd *cmd, int i)
+int	cut_args(t_cmd *cmd, int j, int *i, int ret)
 {
-	int		j;
 	int		size;
 	char	*tmp;
-	int		ret;
 
+	while (cmd->str[*i] && ret == 1)
+	{
+		ret = cut_redir(cmd, i);
+		if (ret < 0)
+			return (-1);
+	}
+	while (ft_iswhitespace(cmd->str[*i]) == 1)
+		*i = *i + 1;
+	size = size_to_char(cmd->str, *i, " \r\n\v\t\f");
+	if (size == -1)
+		return (-1);
+	if (size == 0)
+	{
+		cmd->args[j] = NULL;
+		return (1);
+	}
+	if (new_malloc((void **)&tmp, sizeof(char), size + 1) == 0)
+		return (-1);
+	cpy_instruction(tmp, cmd->str, i, size);
+	cmd->args[j] = ft_strdup(tmp);
+	return (1);
+}
+
+int	get_args(t_cmd *cmd, int i)
+{
+	int		j;
+
+	j = 1;
 	cmd->args = malloc(sizeof(char *) * (count_args(cmd->str, i) + 2));
 	if (cmd->args == NULL)
-		return (0);
-	j = 1;
-	cmd->args[0] = malloc(sizeof(char) * 1); 
+		return (-1);
+	cmd->args[0] = malloc(sizeof(char) * 1);
 	if (cmd->args[0] == NULL)
 		return (-1);
 	cmd->args[0][0] = '\0';
@@ -77,26 +102,8 @@ int		get_args(t_cmd *cmd, int i)
 		i++;
 	while (cmd->str[i])
 	{
-		ret = 1;
-		while (cmd->str[i] && ret == 1)
-		{
-			ret = cut_redir(cmd, &i);
-			if (ret < 0)
-				return (0);
-		}
-		while (ft_iswhitespace(cmd->str[i]) == 1)
-			i++;
-		size = size_to_char(cmd->str, i, " \r\n\v\t\f");
-		if (size == 0)
-		{
-			cmd->args[j] = NULL;
+		if (cut_args(cmd, j, &i, 1) != 1)
 			return (-1);
-		}
-		tmp = malloc(sizeof(char) * size + 1);
-		if (tmp == NULL)
-			return (-1);
-		cpy_instruction(tmp, cmd->str, &i, size + 1);
-		cmd->args[j] = ft_strdup(tmp);
 		j++;
 	}
 	cmd->args[j] = NULL;
@@ -119,9 +126,9 @@ int	cut_command(t_cmd *cmd)
 			return (0);
 	}
 	cut_exec(cmd, &i);
-	if (strcmp_quote(cmd->exec, "echo") == 1)
-		i = get_echo_flag(cmd, cmd->str, i);
-	cmd->builtin = is_builtin(cmd);
+	//if (strcmp_quote(cmd->exec, "echo") == 1)
+	//	i = get_echo_flag(cmd, cmd->str, i);
+	//cmd->builtin = is_builtin(cmd);
 	if (get_args(cmd, i) <= 0)
 		return (0);
 	cmd->is_valid = 1;

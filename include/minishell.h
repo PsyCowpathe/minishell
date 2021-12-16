@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:45:30 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/15 20:28:46 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/16 13:32:25 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ typedef struct s_inst
 
 // instruction
 
-void	cpy_instruction(char *dst, char *src, int *start, int size);
 void	cut_instruction(t_inst *inst);
 
 //command
@@ -76,6 +75,8 @@ void	print_path(char **path);
 
 int		is_closed_quote(char *str, int i);
 int		size_to_char(char *input, int i, char *find);
+void	cpy_instruction(char *dst, char *src, int *start, int size);
+int		cpy_size_to_char(char **dst, char *src, int *start, char *search);
 
 // command_utiliy
 
@@ -97,5 +98,9 @@ int		exec_path(t_cmd *cmd);
 //redirection
 
 int		cut_redir(t_cmd *cmd, int *i);
+
+//open
+
+int	verif_open(t_cmd *cmd, char *fragment, int redir_type);
 
 #endif

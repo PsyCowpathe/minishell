@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:45:25 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/15 20:28:42 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/16 13:32:28 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,35 +14,40 @@
 
 char	*const *g_envp = NULL;
 
+void	exec_lonely_redirection(t_cmd *cmd)
+{
+	int		fd;
+
+	if (cmd->redir_type[1] == 2)
+	{
+		fd = open(cmd->redir_in, O_RDONLY);
+		dup2(fd, STDIN_FILENO);
+		close(fd);
+	}
+	if (cmd->redir_type[0] == 3)
+	{
+		fd = open(cmd->redir_out, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		dup2(fd, STDOUT_FILENO);
+		close(fd);
+	}
+	else if (cmd->redir_type[0] == 4)
+	{
+		fd = open(cmd->redir_out, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		dup2(fd, STDOUT_FILENO);
+		close(fd);
+	}
+}
+
 void	exec_lonely_instruction(t_cmd *cmd)
 {
 	pid_t	cpid;
-	int		fd;
 
-	ft_putstr("lonely");
 	if (cmd->is_valid != 1)
 		return ;
 	cpid = fork();
 	if (cpid == 0)
 	{
-		if (cmd->redir_type[1] == 2)
-		{
-			fd = open(cmd->redir_in, O_RDONLY);
-			dup2(fd, STDIN_FILENO);
-			close(fd);
-		}
-		if (cmd->redir_type[0] == 3)
-		{
-			fd = open(cmd->redir_out, O_WRONLY | O_CREAT | O_APPEND, 0644);
-			dup2(fd, STDOUT_FILENO);
-			close(fd);
-		}
-		else if (cmd->redir_type[0] == 4)
-		{
-			fd = open(cmd->redir_out, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-			dup2(fd, STDOUT_FILENO);
-			close(fd);
-		}
+		exec_lonely_redirection(cmd);
 		cmd->ret[0] = execve(cmd->exec, cmd->args, g_envp);
 		if (cmd->ret[0] == -1)
 			exec_lonely_path(cmd);
@@ -52,12 +57,11 @@ void	exec_lonely_instruction(t_cmd *cmd)
 		;
 }
 
-int	exec_first(t_cmd *cmd)
+int	exec_first(t_cmd *cmd) //pense a faire l'ecriture
 {
 	pid_t	cpid;
 	int		fd;
 
-	ft_putstr("first");
 	pipe(cmd->fd);
 	cpid = fork();
 	if (cpid == -1)
@@ -138,7 +142,6 @@ int	exec_mid(t_cmd *cmd)
 	pid_t	cpid;
 	int		fd;
 
-	ft_putstr("mid");
 	pipe(cmd->fd);
 	cpid = fork();
 	if (cpid == -1)
