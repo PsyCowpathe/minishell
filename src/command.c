@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 16:35:29 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/16 16:15:30 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/17 16:56:19 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,9 +126,9 @@ int	cut_command(t_cmd *cmd)
 			return (0);
 	}
 	cut_exec(cmd, &i);
-	//if (strcmp_quote(cmd->exec, "echo") == 1)
-	//	i = get_echo_flag(cmd, cmd->str, i);
-	//cmd->builtin = is_builtin(cmd);
+	if (strcmp_quote(cmd->exec, "echo") == 1) // on le decale dans le is_builtin
+		i = get_echo_flag(cmd, cmd->str, i);
+	cmd->builtin = is_builtin(cmd);
 	if (get_args(cmd, i) <= 0)
 		return (0);
 	cmd->is_valid = 1;

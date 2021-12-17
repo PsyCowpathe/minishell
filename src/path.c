@@ -6,52 +6,51 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/30 18:26:48 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/16 20:02:36 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/17 15:57:46 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	**get_path(void)
+int		path_count(char *str)
 {
 	int		i;
-	int		d;
-	int		j;
 	int		count;
-	char	**res;
 
 	i = 0;
-	while (g_envp[i])
+	count = 1;
+	while (str[i])
 	{
-		if (ft_strncmp(g_envp[i], "PATH=", 5) == 0)
-			break ;
+		if (str[i] == ':')
+			count++;
 		i++;
 	}
-	count = 1;
-	d = 5;
-	while (g_envp[i][d])
-	{
-		if (g_envp[i][d] == ':')
-			count++;
-		d++;
-	}
+	return (count);
+}
+
+char	**get_path(t_env *env)
+{
+	char	**res;
+	int		count;
+	int		i;
+	int		d;
+
+	while (env && ft_strcmp(env->key, "PATH") != 0)
+		env = env->next;
+	count = path_count(env->str);
 	res = malloc(sizeof(char *) * (count + 1));
 	if (res == NULL)
 		return (NULL);
-	d = 5;
-	j = 0;
-	while (g_envp[i][d])
+	d = 0;
+	i = 0;
+	while (env->str[i])
 	{
-		count = size_to_char(g_envp[i], d, ":");
-		res[j] = malloc(sizeof(char) * (count + 1));
-		if (res[j] == NULL)
-			return (NULL);
-		cpy_instruction(res[j], g_envp[i], &d, count);
-		if (g_envp[i][d])
-			d++;
-		j++;
+		cpy_size_to_char(&res[d], env->str, &i, ":");
+		if (env->str[i])
+			i++;
+		d++;
 	}
-	res[j] = NULL;
+	res[d] = NULL;
 	return (res);
 }
 
@@ -76,7 +75,7 @@ void	exec_lonely_path(t_cmd *cmd)
 	char	*tmp;
 	int		i;
 
-	path = get_path();
+	path = get_path(cmd->env);
 	i = 0;
 	while (cmd->ret[0] == -1 && path[i])
 	{
@@ -85,7 +84,7 @@ void	exec_lonely_path(t_cmd *cmd)
 		if (pid == 0)
 		{
 			tmp = join_path(cmd->exec, path[i]);
-			cmd->ret[0] = execve(tmp, cmd->args, g_envp);
+			cmd->ret[0] = execve(tmp, cmd->args, build_env_tab(cmd));
 			if (cmd->ret[0] == 0)
 				exit(0);
 		}
@@ -104,17 +103,17 @@ int		exec_path(t_cmd *cmd)
 	int		i;
 
 	i = 0;
-	cmd->ret[0] = execve(cmd->exec, cmd->args, g_envp);
+	cmd->ret[0] = execve(cmd->exec, cmd->args, build_env_tab(cmd));
 	if (cmd->ret[0] == 0)
 		exit(0);
 	else
 	{
-		path = get_path();
+		path = get_path(cmd->env);
 		while (cmd->ret[0] == -1 && path[i])
 		{
 			cmd->ret[0] = 0;
 			tmp = join_path(cmd->exec, path[i]);
-			cmd->ret[0] = execve(tmp, cmd->args, g_envp);
+			cmd->ret[0] = execve(tmp, cmd->args, build_env_tab(cmd));
 			if (cmd->ret[0] == 0)
 				exit(0);
 			i++;

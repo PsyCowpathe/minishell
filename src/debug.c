@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 16:30:01 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/16 12:36:50 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/17 15:57:49 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	print_debug(t_inst *inst)
 	ft_putchar('\n');
 }
 
-void	print_path(char **path)
+/*void	print_path(char **path)
 {
 	int		i;
 
@@ -94,4 +94,4 @@ void	print_env(void)
 		ft_putchar('\n');
 		i++;
 	}
-}
+}*/

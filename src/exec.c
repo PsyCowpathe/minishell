@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 15:23:48 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/16 20:29:31 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/17 16:56:20 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	exec_lonely(t_cmd *cmd)
 	{
 		create_input_redirection(cmd);
 		create_output_redirection(cmd);
-		cmd->ret[0] = execve(cmd->exec, cmd->args, g_envp);
+		cmd->ret[0] = execve(cmd->exec, cmd->args, build_env_tab(cmd));
 		if (cmd->ret[0] == -1)
 			exec_lonely_path(cmd);
 		exit(0);

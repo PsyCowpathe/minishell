@@ -6,13 +6,13 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 16:28:37 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/16 16:28:47 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/17 15:57:42 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	cut_instruction(t_inst *inst)
+int	cut_instruction(t_inst *inst, t_env *env)
 {
 	int		i;
 	char	*command;
@@ -24,7 +24,7 @@ int	cut_instruction(t_inst *inst)
 			i++;
 		if (cpy_size_to_char(&command, inst->str, &i, "|") != 1)
 			return (-1);
-		cmdadd_back(&inst->cmds, cmdnew(ft_strdup(command)));
+		cmdadd_back(&inst->cmds, cmdnew(ft_strdup(command), env));
 		free(command);
 		if (inst->str[i] == '|')
 			i++;

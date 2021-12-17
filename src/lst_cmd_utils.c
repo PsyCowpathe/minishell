@@ -6,13 +6,13 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 17:49:26 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/16 20:07:24 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/17 15:57:46 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_cmd	*cmdnew(char *content)
+t_cmd	*cmdnew(char *content, t_env *env)
 {
 	t_cmd	*new;
 
@@ -37,6 +37,7 @@ t_cmd	*cmdnew(char *content)
 	new->prev = NULL;
 	new->fd[0] = -1;
 	new->fd[1] = -1;
+	new->env = env;
 	return (new);
 }
 

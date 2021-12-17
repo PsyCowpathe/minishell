@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:45:30 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/16 20:29:31 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/17 16:56:20 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,14 @@
 # include <sys/wait.h>
 # include <fcntl.h>
 
-extern char	*const *g_envp;
+typedef struct s_env
+{
+	char	*str;
+	char	*key;
+	char	*value;
+	int		set;
+	struct s_env	*next;
+}				t_env;
 
 typedef struct s_cmd
 {
@@ -36,6 +43,7 @@ typedef struct s_cmd
 	int				hdoc_fd;
 	char			*redir_in;
 	char			*redir_out;
+	t_env			*env;
 	struct s_cmd	*prev;
 	struct s_cmd	*next;
 }				t_cmd;
@@ -46,9 +54,12 @@ typedef struct s_inst
 	t_cmd	*cmds;
 }				t_inst;
 
+
+
+
 // instruction
 
-int		cut_instruction(t_inst *inst);
+int	cut_instruction(t_inst *inst, t_env *env);
 
 //command
 
@@ -61,12 +72,21 @@ void	instclear(t_inst *lst);
 
 // lst_cmd_utils
 
-t_cmd	*cmdnew(char *content);
+t_cmd	*cmdnew(char *content, t_env *env);
 void	cmdadd_back(t_cmd **alst, t_cmd *new);
 void	cmdclear(t_cmd **lst);
 t_cmd	*cmdlast(t_cmd *lst);
 
-// debug															//ntm
+
+// lst_env_utils
+
+void	create_env_lst(t_env **env, char *const envp[]);
+t_env	*envnew(char *str);
+t_env	*envlast(t_env *lst);
+void	envadd_back(t_env **alst, t_env *new);
+void	envclear(t_env **lst);
+
+// debug															//a delete
 
 void	print_debug(t_inst *inst);
 void	print_env(void);
@@ -81,17 +101,18 @@ int		cpy_size_to_char(char **dst, char *src, int *start, char *search);
 
 // command_utiliy
 
-int	is_builtin(t_cmd *cmd);
-int	count_args(char	*str, int i);
-int	strcmp_quote(char *str, char *find);
+int		is_builtin(t_cmd *cmd);
+int		count_args(char	*str, int i);
+int		strcmp_quote(char *str, char *find);
 
 // builtin
 
 void	exec_echo(t_cmd *cmd);
+void	simple_builtin(t_cmd *cmd);
 
 // path
 
-char	**get_path(void);
+char	**get_path(t_env *env);
 char	*join_path(char *exec, char *path);
 void	exec_lonely_path(t_cmd *cmd);
 int		exec_path(t_cmd *cmd);
@@ -102,7 +123,7 @@ int		cut_redir(t_cmd *cmd, int *i);
 
 //open
 
-int	verif_open(t_cmd *cmd, char *fragment, int redir_type);
+int		verif_open(t_cmd *cmd, char *fragment, int redir_type);
 
 //input_output
 
@@ -119,5 +140,9 @@ void	exec_lonely(t_cmd *cmd);
 void	first_child(t_cmd *cmd);
 void	last_child(t_cmd *cmd);
 void	perfect_child(t_cmd *cmd);
+
+//env
+
+char	**build_env_tab(t_cmd *cmd);
 
 #endif
