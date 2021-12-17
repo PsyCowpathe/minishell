@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 19:06:46 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/16 20:29:30 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/17 18:22:08 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,14 @@ int	check_redirection(t_cmd *cmd, int i)
 {
 	int		save;
 	char	c;
+	int		trigger;
 
 	c = '\0';
 	save = i;
+	trigger = 0;
 	while (ft_ischar("><", cmd->str[i]) == 1)
 	{
+		trigger = 1;
 		if (i == save)
 			c = cmd->str[i];
 		if (cmd->str[i] != c)
@@ -37,7 +40,7 @@ int	check_redirection(t_cmd *cmd, int i)
 	}
 	while (ft_iswhitespace(cmd->str[i]) == 1)
 		i++;
-	if (!cmd->str[i])
+	if (trigger == 1 && !cmd->str[i])
 	{
 		ft_putstr("Error: redirection\n");
 		return (-3);

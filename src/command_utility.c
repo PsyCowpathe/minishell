@@ -6,39 +6,34 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/29 16:57:58 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/17 16:56:17 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/17 17:26:58 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	strcmp_quote(char *str, char *find)
+int		strcmp_quote(char *str, char *find)
 {
 	int		i;
-	int		trigger;
 	int		d;
-	char	c;
 
 	i = 0;
-	trigger = 0;
-	c = 0;
-	if ((str[i] == '"' || str[i] == '\'') && ++trigger)
-	{
-		c = str[i];
-		while (str[i] == c)
-			i++;
-	}
 	d = 0;
-	while (str[i] && find[d])
+	while (str[i] || find[d])
 	{
-		if (str[i++] != find[d++])
-			return (0);
-		while (str[i] && str[i] == c && ++trigger)
+		if (str[i] == '\'' || str[i] == '\"')
 			i++;
+		else
+		{
+			if (str[i] != find[d])
+				return (0);
+			if (str[i])
+				i++;
+			if (find[d])
+				d++;
+		}
 	}
-	if ((trigger % 2 == 0 && ft_iswhitespace(str[i]) == 1) || str[i] == '\0')
-		return (1);
-	return (0);
+	return (1);
 }
 
 int	is_builtin(t_cmd *cmd)

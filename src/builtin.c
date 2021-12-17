@@ -5,20 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/17 16:46:13 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/17 16:56:16 by agirona          ###   ########lyon.fr   */
-/*                                                                            */
-/* ************************************************************************** */
-
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   builtin.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/30 18:25:49 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/17 16:44:19 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/12/17 18:22:10 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,15 +98,52 @@ void	exec_exit(t_cmd *cmd)
 		exit(0);
 }
 
+/*int		relative(t_cmd *cmd, char *pwd)
+{
+	int		i;
+	int		d;
+
+	i = 0;
+	d = 0;
+	while (pwd[d])
+		d++;
+	while (cmd->args[1][i])
+	{
+		if (cmd->args[1][i] == '.' && cmd->args[1][i + 1] == '/')
+			i = i + 2;
+		else if (cmd->args[1][i + 2] && cmd->args[1][i] == '.'
+			&& cmd->args[1][i + 1] == '.' && cmd->args[1][i + 2] == '/')
+		{
+			d = 0;
+			while (pwd[d] && pwd[d] != '/')
+				d--;
+		}
+	}
+}
+
 void	exec_cd(t_cmd *cmd)
 {
-	//oulaaah
-}
+	struct stat path_stat;
+	t_env	*current;
+	char	*tmp;
+
+    stat(cmd->args[1], &path_stat);
+    if (S_ISDIR(path_stat.st_mode) == 1)
+	{
+		while (current && ft_strcmp(current->key, "PWD") == 0)
+			current = current->next;
+		tmp = ft_strdup(current->value);
+		if (cmd->args[1][0] == '.')
+			relative(cmd, tmp);
+	}
+	else
+		ft_putstr("Error: No such file or directory\n");
+}*/
 
 void	simple_builtin(t_cmd *cmd)
 {
 	if (cmd->builtin == 1)
-		exec_cd(cmd);
+		;//exec_cd(cmd);
 	else if (cmd->builtin == 2)
 		exec_echo(cmd);
 	else if (cmd->builtin == 3)
