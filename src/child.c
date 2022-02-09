@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 16:03:55 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/17 15:57:45 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/08 16:41:22 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ void	first_child(t_cmd *cmd)
 
 void	last_child(t_cmd *cmd)
 {
-	close(cmd->fd[0]);
-	close(cmd->fd[1]);
+	close(cmd->fd[0]); // !
+	close(cmd->fd[1]); // !
 	if (create_input_redirection(cmd) != 1)
 		dup2(cmd->prev->fd[0], STDIN_FILENO);
 	close(cmd->prev->fd[0]);

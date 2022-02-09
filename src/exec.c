@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 15:23:48 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/17 16:56:20 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/08 16:38:21 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int	exec_last(t_cmd *cmd)
 {
 	pid_t	cpid;
 
-	pipe(cmd->fd);
+	pipe(cmd->fd); //on peut le virer (!)
 	cpid = fork();
 	if (cpid == -1)
 	{
@@ -89,11 +89,11 @@ int	exec_last(t_cmd *cmd)
 		return (0);
 	}
 	if (cpid == 0)
-		last_child(cmd);
+		last_child(cmd); //!
 	else
 	{
-		close(cmd->fd[0]);
-		close(cmd->fd[1]);
+		close(cmd->fd[0]); // !
+		close(cmd->fd[1]);// !
 		while (wait(&cpid) > 0)
 			;
 		close(cmd->prev->fd[0]);
