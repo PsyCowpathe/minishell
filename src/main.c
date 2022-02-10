@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:45:25 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/09 19:56:44 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/10 15:55:51 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,7 @@ int	cut_input(t_inst **inst, char *input, int *i)
 //"$'tt'" il ecrit tout ce qu'il y a entre double quote //done
 //'$tt' '"$tt"'  '$"tt"' il ecrit tout ce qu'il y a entre simple quote //done
 //$tt normal //done
-
-//"'$tt'" "$tt" il remplace et il garde les autres char quote compris	
+//"'$tt'" "$tt" il remplace et il garde les autres char quote compris//done
 //$'tt' $"tt" il vire le dolar et ecrit le reste
 
 int		trigger(char c, int state)
@@ -65,7 +64,7 @@ int		search_key(t_env *env, char *key, char **res)
 		{
 			if (env->set == 1)
 			{
-				*res = env->value;
+				*res = ft_strdup(env->value);
 				return (1);
 			}
 			*res = NULL;
@@ -103,7 +102,6 @@ char	*dollar_project(t_env *env, char *str, int *i, int state)
 		return (NULL); //error
 	if (search_key(env, key, &res) == 0)
 	{
-		ft_putchar(str[*i]);
 		if (new_malloc((void *)&res, sizeof(char), 1) == 0)
 			return (NULL); //error
 		res[0] = '\0';
@@ -140,7 +138,7 @@ void	dollar_expand(t_cmd *cmd, t_env *env)
 			save = i;
 			res = dollar_project(env, cmd->args[1], &i, state);
 			full_res[d] = '\0';
-			d = i - save + 1;
+			d += ft_strlen(res);
 			tmp = ft_strjoin(full_res, res);
 			if (tmp[0] == '\0')
 				d = 0;
