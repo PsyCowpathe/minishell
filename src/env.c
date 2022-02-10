@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/17 15:38:11 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/17 15:57:44 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/10 18:45:18 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,3 @@ char	**build_env_tab(t_cmd *cmd)
 	cmd->env = save;
 	return (res);
 }
-

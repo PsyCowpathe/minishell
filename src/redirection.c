@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 19:06:46 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/17 18:22:08 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/10 19:45:12 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,6 @@ int	cut_redir(t_cmd *cmd, int *i)
 		ret = verif_open(cmd, fragment, redir_type);
 		if (ret != 1)
 			return (ret);
-		free(fragment);
 		return (1);
 	}
 	return (0);

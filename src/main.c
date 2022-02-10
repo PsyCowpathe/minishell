@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:45:25 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/10 15:55:51 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/10 19:45:10 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ char	*dollar_project(t_env *env, char *str, int *i, int state)
 	return (res);
 }
 
-void	dollar_expand(t_cmd *cmd, t_env *env)
+char	*dollar_expand(char *str, t_env *env)
 {
 	int		i;
 	int		state;
@@ -123,20 +123,20 @@ void	dollar_expand(t_cmd *cmd, t_env *env)
 	i = 0;
 	state = 0;
 	d = 0;
-	full_res = malloc(sizeof(char) * (ft_strlen(cmd->args[1]) + 1));
-	while (cmd->args[1][i])
+	full_res = malloc(sizeof(char) * (ft_strlen(str) + 1));
+	while (str[i])
 	{
-		if (cmd->args[1][i] == '\'' || cmd->args[1][i] == '\"')
+		if (str[i] == '\'' || str[i] == '\"')
 		{
-			state = trigger(cmd->args[1][i], state);
-			full_res[d] = cmd->args[1][i];
+			state = trigger(str[i], state);
+			full_res[d] = str[i];
 			i++;
 			d++;
 		}
-		if (cmd->args[1][i] == '$')
+		if (str[i] == '$')
 		{
 			save = i;
-			res = dollar_project(env, cmd->args[1], &i, state);
+			res = dollar_project(env, str, &i, state);
 			full_res[d] = '\0';
 			d += ft_strlen(res);
 			tmp = ft_strjoin(full_res, res);
@@ -144,21 +144,23 @@ void	dollar_expand(t_cmd *cmd, t_env *env)
 				d = 0;
 			free(res);
 			free(full_res);
-			full_res = malloc(sizeof(char) * (ft_strlen(cmd->args[1]) + ft_strlen(tmp) + 1));	
+			full_res = malloc(sizeof(char) * (ft_strlen(str) + ft_strlen(tmp) + 1));	
 			ft_strncpy(full_res, tmp, ft_strlen(tmp) + 1);
 
 		}
-		else if (cmd->args[1][i])
+		else if (str[i])
 		{
-			full_res[d] = cmd->args[1][i];
+			full_res[d] = str[i];
 			i++;
 			d++;
 		}
 	}
 	full_res[d] = '\0';
-	free(cmd->args[1]);
-	cmd->args[1] = full_res;
-	full_res = NULL;
+	free(str);
+	if (full_res[0] != '\0')
+		return (full_res);
+	else
+		 return (NULL); //a revoir pour la boucle CONCAT
 }
 
 void	exec_line(t_inst *inst, char *input, int *i, t_env *env)
@@ -169,7 +171,6 @@ void	exec_line(t_inst *inst, char *input, int *i, t_env *env)
 			return ;
 		if (cut_instruction(inst, env) != 1)
 			return ;
-		dollar_expand(inst->cmds, env);
 		//builting_detection;
 		//print_debug(inst); //delete
 		if (inst->cmds->next == NULL)
