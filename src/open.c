@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 12:36:27 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/10 19:45:13 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/15 15:45:43 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,13 +78,11 @@ int	verif_open_out(t_cmd *cmd, char *fragment, int redir_type)
 	return (1);
 }
 
-char	*dollar_expand(char *str, t_env *env); //delete
-
 int	verif_open(t_cmd *cmd, char *fragment, int redir_type)
 {
 	int		ret;
 
-	fragment = dollar_expand(fragment, cmd->env);
+	fragment = dollar_expand(fragment, cmd->env, 0, 0);
 	if ((redir_type - 1) / 2 == 0)
 	{
 		if (verif_open_in(cmd, fragment, redir_type) == -1)

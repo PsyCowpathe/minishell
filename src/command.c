@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 16:35:29 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/10 19:45:11 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/15 15:45:26 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,8 +110,6 @@ int	get_args(t_cmd *cmd, int i)
 	return (1);
 }
 
-char	*dollar_expand(char *str, t_env *env); //delete
-
 void	expand_args(t_cmd *cmd)
 {
 	int		i;
@@ -119,7 +117,7 @@ void	expand_args(t_cmd *cmd)
 	i = 1;
 	while (cmd->args[i])
 	{
-		cmd->args[i] = dollar_expand(cmd->args[i], cmd->env);
+		cmd->args[i] = dollar_expand(cmd->args[i], cmd->env, 0, 0);
 		i++;
 	}
 }
@@ -145,7 +143,7 @@ int	cut_command(t_cmd *cmd)
 	cmd->builtin = is_builtin(cmd);
 	if (get_args(cmd, i) <= 0)
 		return (0);
-	cmd->exec = dollar_expand(cmd->exec, cmd->env);
+	cmd->exec = dollar_expand(cmd->exec, cmd->env, 0, 0);
 	cmd->args[0] = cmd->exec;
 	expand_args(cmd);
 	cmd->is_valid = 1;

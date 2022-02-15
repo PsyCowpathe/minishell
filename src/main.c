@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:45:25 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/10 19:45:10 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/15 16:09:26 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,135 +34,6 @@ int	cut_input(t_inst **inst, char *input, int *i)
 	return (1);
 }
 
-//"$'tt'" il ecrit tout ce qu'il y a entre double quote //done
-//'$tt' '"$tt"'  '$"tt"' il ecrit tout ce qu'il y a entre simple quote //done
-//$tt normal //done
-//"'$tt'" "$tt" il remplace et il garde les autres char quote compris//done
-//$'tt' $"tt" il vire le dolar et ecrit le reste
-
-int		trigger(char c, int state)
-{
-	int		ret;
-
-	ret = state;
-	if (c == '\"' && state == 0)
-		ret = 1;
-	else if (c == '\"' && state == 1)
-		ret = 0;
-	else if (c == '\'' && state == 0)
-		ret = 2;
-	else if (c == '\'' && state == 2)
-		ret = 0;
-	return (ret);
-}
-
-int		search_key(t_env *env, char *key, char **res)
-{
-	while (env)
-	{
-		if (ft_strcmp(env->key, key) == 0)
-		{
-			if (env->set == 1)
-			{
-				*res = ft_strdup(env->value);
-				return (1);
-			}
-			*res = NULL;
-			return (0);
-		}
-		env = env->next;
-	}
-	*res = NULL;
-	return (0);
-}
-
-char	*dollar_project(t_env *env, char *str, int *i, int state)
-{
-	char	*res;
-	char	*key;
-
-	if (state == 2 || (state == 1 && (str[(*i) + 1] == '\"' || str[(*i) + 1] == '\'')))
-	{
-		if (new_malloc((void *)&res, sizeof(char), 1 + 1) == 0)
-			return (NULL); //error
-		res[0] = '$';
-		res[1] = '\0';
-		*i = *i + 1;
-		return (res);
-	}
-	*i = *i + 1;
-	if (state == 0 && str[*i] && ft_ischar("\r\n\v\t\f \'\"", str[*i]) == 1)
-	{
-		if (new_malloc((void *)&res, sizeof(char), 1 + 1) == 0)
-			return (NULL); //error
-		res[0] = '\0';
-		return (res);
-	}
-	if (cpy_size_to_char(&key, str, i, "\r\n\v\t\f \'\"") != 1)
-		return (NULL); //error
-	if (search_key(env, key, &res) == 0)
-	{
-		if (new_malloc((void *)&res, sizeof(char), 1) == 0)
-			return (NULL); //error
-		res[0] = '\0';
-		return (res);
-	}
-	return (res);
-}
-
-char	*dollar_expand(char *str, t_env *env)
-{
-	int		i;
-	int		state;
-	int		d;
-	int		save;
-	char	*res;
-	char	*tmp;
-	char	*full_res;
-
-	i = 0;
-	state = 0;
-	d = 0;
-	full_res = malloc(sizeof(char) * (ft_strlen(str) + 1));
-	while (str[i])
-	{
-		if (str[i] == '\'' || str[i] == '\"')
-		{
-			state = trigger(str[i], state);
-			full_res[d] = str[i];
-			i++;
-			d++;
-		}
-		if (str[i] == '$')
-		{
-			save = i;
-			res = dollar_project(env, str, &i, state);
-			full_res[d] = '\0';
-			d += ft_strlen(res);
-			tmp = ft_strjoin(full_res, res);
-			if (tmp[0] == '\0')
-				d = 0;
-			free(res);
-			free(full_res);
-			full_res = malloc(sizeof(char) * (ft_strlen(str) + ft_strlen(tmp) + 1));	
-			ft_strncpy(full_res, tmp, ft_strlen(tmp) + 1);
-
-		}
-		else if (str[i])
-		{
-			full_res[d] = str[i];
-			i++;
-			d++;
-		}
-	}
-	full_res[d] = '\0';
-	free(str);
-	if (full_res[0] != '\0')
-		return (full_res);
-	else
-		 return (NULL); //a revoir pour la boucle CONCAT
-}
-
 void	exec_line(t_inst *inst, char *input, int *i, t_env *env)
 {
 	while (input[*i])
@@ -172,7 +43,7 @@ void	exec_line(t_inst *inst, char *input, int *i, t_env *env)
 		if (cut_instruction(inst, env) != 1)
 			return ;
 		//builting_detection;
-		//print_debug(inst); //delete
+		print_debug(inst); //delete
 		if (inst->cmds->next == NULL)
 		{
 			if (inst->cmds->builtin > 0)
