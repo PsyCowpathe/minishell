@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/30 18:26:48 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/17 15:57:46 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/16 15:35:04 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,11 @@ char	**get_path(t_env *env)
 		env = env->next;
 	count = path_count(env->str);
 	res = malloc(sizeof(char *) * (count + 1));
+	if (env->set == 0)
+	{
+		res[0] = NULL;
+		return (res);
+	}
 	if (res == NULL)
 		return (NULL);
 	d = 0;
@@ -75,7 +80,7 @@ void	exec_lonely_path(t_cmd *cmd)
 	char	*tmp;
 	int		i;
 
-	path = get_path(cmd->env);
+	path = get_path(cmd->env); //error
 	i = 0;
 	while (cmd->ret[0] == -1 && path[i])
 	{

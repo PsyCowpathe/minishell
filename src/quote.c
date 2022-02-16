@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 16:21:48 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/15 16:22:05 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/16 14:11:02 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,10 @@ void	shift(char *str, int i)
 	str[i] = '\0';
 }
 
-void	remove_quotes(char *str, int i)
+void	remove_quotes(char *str)
 {
-	int		i;
 	int		trigger;
+	int		i;
 
 	i = 0;
 	trigger = 0;

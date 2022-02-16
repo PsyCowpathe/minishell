@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:45:30 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/15 16:23:01 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/16 15:35:07 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,6 +159,6 @@ char	*dollar_expand_return_fucktion(char *full_res, char *str, int d);
 
 //quote
 
-void	remove_quotes(char *str, int i);
+void	remove_quotes(char *str);
 
 #endif

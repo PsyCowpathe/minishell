@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:45:25 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/15 16:09:26 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/16 15:35:10 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	exec_line(t_inst *inst, char *input, int *i, t_env *env)
 		if (cut_instruction(inst, env) != 1)
 			return ;
 		//builting_detection;
-		print_debug(inst); //delete
+		//print_debug(inst); //deletee
 		if (inst->cmds->next == NULL)
 		{
 			if (inst->cmds->builtin > 0)
