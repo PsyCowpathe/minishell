@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dollar.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 14:38:55 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/16 15:35:05 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/22 15:15:45 by agoublai         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,5 +86,5 @@ char	*dollar_expand(char *str, t_env *env, int i, int d)
 		else if (str[i])
 			full_res[d++] = str[i++];
 	}
-	return (dollar_expand_return_fucktion(full_res, str, d));
+	return (dollar_expand_return_fucktion(full_res, d));
 }

@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:45:30 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/16 15:35:07 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/22 20:48:16 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,9 @@
 # include <sys/wait.h>
 # include <fcntl.h>
 #include <sys/stat.h>
+#include <signal.h>
+
+pid_t	g_pid_t[1026];
 
 typedef struct s_env
 {
@@ -55,9 +58,6 @@ typedef struct s_inst
 	t_cmd	*cmds;
 }				t_inst;
 
-
-
-
 // instruction
 
 int	cut_instruction(t_inst *inst, t_env *env);
@@ -81,7 +81,7 @@ t_cmd	*cmdlast(t_cmd *lst);
 
 // lst_env_utils
 
-void	create_env_lst(t_env **env, char *const envp[]);
+t_env	*create_env_lst(char *const envp[]);
 t_env	*envnew(char *str);
 t_env	*envlast(t_env *lst);
 void	envadd_back(t_env **alst, t_env *new);
@@ -115,7 +115,7 @@ void	simple_builtin(t_cmd *cmd);
 
 char	**get_path(t_env *env);
 char	*join_path(char *exec, char *path);
-void	exec_lonely_path(t_cmd *cmd);
+void	exec_lonely_path(t_cmd *cmd, char **env_tab);
 int		exec_path(t_cmd *cmd);
 
 //redirection
@@ -134,7 +134,7 @@ int		create_input_redirection(t_cmd *cmd);
 //exec
 
 void	exec_pipe(t_cmd	*cmd);
-void	exec_lonely(t_cmd *cmd);
+void	exec_lonely(t_cmd *cmd, t_inst *inst);
 
 //child
 
@@ -155,10 +155,25 @@ char	*dollar_expand(char *str, t_env *env, int i, int d);
 int		search_key(t_env *env, char *key, char **res);
 int		trigger(char c, int state);
 void	join_all_part(char *res, char **full_res, char *str, int *d);
-char	*dollar_expand_return_fucktion(char *full_res, char *str, int d);
+char	*dollar_expand_return_fucktion(char *full_res, int d);
 
 //quote
 
 void	remove_quotes(char *str);
+
+// dans le main.c
+void	env_clear(t_env *env);
+
+// dans lst_inst_utils.c
+void	cmd_clear(t_cmd *cmd);
+
+//pid
+
+void	set_pid(int pid);
+void	init_pid();
+
+//signals
+
+void	signals(void);
 
 #endif

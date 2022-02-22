@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:45:25 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/16 15:35:10 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/22 20:48:17 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,7 @@ int	cut_input(t_inst **inst, char *input, int *i)
 	if (new_malloc((void **)&instruction, sizeof(char), size + 1) == 0)
 		return (-1);
 	cpy_instruction(instruction, input, i, size);
-	*inst = instnew(ft_strdup(instruction));
-	free(instruction);
+	*inst = instnew(instruction);
 	if (input[*i] == ';')
 		*i = *i + 1;
 	return (1);
@@ -49,7 +48,7 @@ void	exec_line(t_inst *inst, char *input, int *i, t_env *env)
 			if (inst->cmds->builtin > 0)
 				simple_builtin(inst->cmds);
 			else
-				exec_lonely(inst->cmds);
+				exec_lonely(inst->cmds, inst);
 			instclear(inst);
 		}
 		else
@@ -60,25 +59,54 @@ void	exec_line(t_inst *inst, char *input, int *i, t_env *env)
 	}
 }
 
+void	env_clear(t_env *env)
+{
+	t_env	*next;
+
+	while (env)
+	{
+		next = env->next;
+		if (env->str)
+			free(env->str);
+		if (env->key)
+			free(env->key);
+		if (env->value)
+			free(env->value);
+		free(env);
+		env = next;
+	}
+}
+
 int	main(int argc, char **argv, char *const envp[])
 {
 	int		exec_ret;
 	char	*input;
 	int		i;
+	int		d;
 	t_inst	inst;
 	t_env	*env;
 
 	(void)argc;
 	(void)argv;
 	exec_ret = 0;
-	create_env_lst(&env, envp);
+	env = create_env_lst(envp);
+	signals();
+	d = 0;
 	while (exec_ret == 0)
 	{
+		init_pid(); //faudra split
+		d++;
 		i = 0;
 		input = readline("minishell$> ");
+		if (input == NULL)
+			exec_ret = 1;
 		add_history(input);
-		exec_line(&inst, input, &i, env);
+		if (input)
+			exec_line(&inst, input, &i, env);
+		free(input);
 	}
+	if (env)
+		env_clear(env);
 	//rl_clear_history();
 	return (0);
 }

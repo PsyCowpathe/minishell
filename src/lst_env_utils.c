@@ -3,44 +3,40 @@
 /*                                                        :::      ::::::::   */
 /*   lst_env_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/17 10:32:53 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/17 15:57:59 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/21 16:10:55 by agoublai         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	create_env_lst(t_env **env, char *const envp[])
+t_env	*create_env_lst(char *const envp[])
 {
 	int		i;
-	int		d;
+	t_env	*env;
 
 	i = 0;
 	if (envp[i])
-		*env = envnew(ft_strdup(envp[i++]));
+		env = envnew(ft_strdup(envp[i++]));
 	while (envp[i])
-		envadd_back(env, envnew(ft_strdup(envp[i++])));
-	while (*env)
-	{
-		d = 0;
-		cpy_size_to_char(&(*env)->key, (*env)->str, &d, "=");
-		d++;
-		cpy_size_to_char(&(*env)->value, (*env)->str, &d, "\0");
-		env = &(*env)->next;
-	}
+		envadd_back(&env, envnew(ft_strdup(envp[i++])));
+	return (env);
 }
 
 t_env	*envnew(char *str)
 {
 	t_env	*new;
+	int		d;
 
+	d = 0;
 	if (new_malloc((void *)&new, sizeof(t_env), 1) == 0)
 		return (NULL);
 	new->str = str;
-	new->key = NULL;
-	new->value = NULL;
+	cpy_size_to_char(&new->key, new->str, &d, "=");
+	d++;
+	cpy_size_to_char(&new->value, new->str, &d, "\0");
 	new->set = 1;
 	new->next = NULL;
 	return (new);

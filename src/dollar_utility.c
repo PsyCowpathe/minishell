@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dollar_utility.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 15:54:04 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/16 14:11:05 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/22 15:15:39 by agoublai         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,10 +65,10 @@ void	join_all_part(char *res, char **full_res, char *str, int *d)
 	ft_strncpy(*full_res, tmp, ft_strlen(tmp) + 1);
 }
 
-char	*dollar_expand_return_fucktion(char *full_res, char *str, int d)
+char	*dollar_expand_return_fucktion(char *full_res, int d)
 {
 	full_res[d] = '\0';
-	free(str);
+	//free(str);
 	if (full_res[0] != '\0')
 	{
 		remove_quotes(full_res);

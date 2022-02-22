@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/30 18:26:48 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/16 15:35:04 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/22 20:48:15 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,25 @@ char	*join_path(char *exec, char *path)
 	return (ret);
 }
 
-void	exec_lonely_path(t_cmd *cmd)
+void	envtab_clear(char **env_tab)
 {
-	pid_t	pid;
+	int	j;
+
+	j = 0;
+	if (env_tab)
+	{
+		while (env_tab[j])
+		{
+			free(env_tab[j]);
+			j++;
+		}
+		free(env_tab);
+		env_tab = NULL;
+	}
+}
+
+void	exec_lonely_path(t_cmd *cmd, char **env_tab)
+{
 	char	**path;
 	char	*tmp;
 	int		i;
@@ -85,20 +101,21 @@ void	exec_lonely_path(t_cmd *cmd)
 	while (cmd->ret[0] == -1 && path[i])
 	{
 		cmd->ret[0] = 0;
-		pid = fork();
-		if (pid == 0)
+		tmp = join_path(cmd->exec, path[i]);
+		cmd->ret[0] = execve(tmp, cmd->args, env_tab);
+		free(tmp);
+		if (cmd->ret[0] == 0)
 		{
-			tmp = join_path(cmd->exec, path[i]);
-			cmd->ret[0] = execve(tmp, cmd->args, build_env_tab(cmd));
-			if (cmd->ret[0] == 0)
-				exit(0);
+			envtab_clear(path);
+			envtab_clear(env_tab);
+			exit(0);
 		}
-		while ((wait(&pid)) > 0)
-			;
 		i++;
 	}
 	if (cmd->ret[0] == -1)
 		ft_putstr("Error: command not found\n");
+	envtab_clear(path);
+	envtab_clear(env_tab);
 }
 
 int		exec_path(t_cmd *cmd)
@@ -106,11 +123,16 @@ int		exec_path(t_cmd *cmd)
 	char	**path;
 	char	*tmp;
 	int		i;
+	char	**env_tab;
 
 	i = 0;
-	cmd->ret[0] = execve(cmd->exec, cmd->args, build_env_tab(cmd));
+	env_tab = build_env_tab(cmd);
+	cmd->ret[0] = execve(cmd->exec, cmd->args, env_tab);
 	if (cmd->ret[0] == 0)
+	{
+		envtab_clear(env_tab);
 		exit(0);
+	}
 	else
 	{
 		path = get_path(cmd->env);
@@ -118,12 +140,20 @@ int		exec_path(t_cmd *cmd)
 		{
 			cmd->ret[0] = 0;
 			tmp = join_path(cmd->exec, path[i]);
-			cmd->ret[0] = execve(tmp, cmd->args, build_env_tab(cmd));
+			cmd->ret[0] = execve(tmp, cmd->args, env_tab);
+			free(tmp);
 			if (cmd->ret[0] == 0)
+			{
+				envtab_clear(path);
+				envtab_clear(env_tab);
 				exit(0);
+			}
 			i++;
 		}
+		envtab_clear(path);
+		envtab_clear(env_tab);
 		return (0);
 	}
+	envtab_clear(env_tab);
 	return (1);
 }

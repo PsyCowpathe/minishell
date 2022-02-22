@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 16:35:29 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/16 15:35:08 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/21 13:44:12 by agoublai         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ int	cut_args(t_cmd *cmd, int j, int *i, int ret)
 		return (-1);
 	cpy_instruction(tmp, cmd->str, i, size);
 	cmd->args[j] = ft_strdup(tmp);
+	free(tmp);
 	return (1);
 }
 
@@ -144,6 +145,7 @@ int	cut_command(t_cmd *cmd)
 	if (get_args(cmd, i) <= 0)
 		return (0);
 	cmd->exec = dollar_expand(cmd->exec, cmd->env, 0, 0);
+	free(cmd->args[0]);
 	cmd->args[0] = cmd->exec;
 	expand_args(cmd);
 	cmd->is_valid = 1;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/17 15:38:11 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/10 18:45:18 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/21 17:46:17 by agoublai         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,8 @@ char	**build_env_tab(t_cmd *cmd)
 	while (cmd->env)
 	{
 		if (cmd->env->set == 1)
-			res[i++] = ft_strdup(cmd->env->str);
+			res[i] = ft_strdup(cmd->env->str);
+		i++;
 		cmd->env = cmd->env->next;
 	}
 	res[i] = NULL;

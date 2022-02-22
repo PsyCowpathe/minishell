@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 19:06:46 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/16 15:35:08 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/22 15:15:18 by agoublai         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,12 @@ int	is_redir(t_cmd *cmd, int *i, int *ret)
 	return (*ret);
 }
 
+int	free_fragment(char *fragment, int ret)
+{
+	free(fragment);
+	return (ret);
+}
+
 int	cut_redir(t_cmd *cmd, int *i)
 {
 	int		redir_type;
@@ -117,13 +123,15 @@ int	cut_redir(t_cmd *cmd, int *i)
 			cmd->redir_type[0] = redir_type;
 		ret = cpy_size_to_char(&fragment, cmd->str, i, " \r\n\v\t\f");
 		if (ret != 1)
-			return (ret);
+			return (free_fragment(fragment, ret));
 		ret = verif_open(cmd, fragment, redir_type);
 		if (ret != 1)
-			return (ret);
+			return (free_fragment(fragment, ret));
+		if (fragment)
+			free(fragment);
 		return (1);
 	}
 	if (redir_type < 0)
-		;//error
+		{;}//error
 	return (0);
 }

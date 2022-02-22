@@ -3,31 +3,39 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 15:23:48 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/08 16:38:21 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/22 20:48:13 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	exec_lonely(t_cmd *cmd)
+void	exec_lonely(t_cmd *cmd, t_inst *inst)
 {
 	pid_t	cpid;
+	char	**env_tab;
+	//int		j = 0;
+	(void) inst;
 
-	if (cmd->is_valid != 1)
+	if (cmd->is_valid != 1) //on regarde
 		return ;
 	cpid = fork();
 	if (cpid == 0)
 	{
 		create_input_redirection(cmd);
 		create_output_redirection(cmd);
-		cmd->ret[0] = execve(cmd->exec, cmd->args, build_env_tab(cmd));
+		env_tab = build_env_tab(cmd);
+		cmd->ret[0] = execve(cmd->exec, cmd->args, env_tab);
 		if (cmd->ret[0] == -1)
-			exec_lonely_path(cmd);
+			exec_lonely_path(cmd, env_tab);
+		//env_clear(cmd->env);
+		//instclear(inst);
+		//write(1, "cc", 2);
 		exit(0);
 	}
+	set_pid(cpid);
 	while (wait(&cpid) > 0)
 		;
 }
@@ -47,6 +55,7 @@ int	exec_first(t_cmd *cmd)
 		first_child(cmd);
 	else
 	{
+		set_pid(cpid);
 		close(cmd->fd[1]);
 		while (wait(&cpid) > 0)
 			;
@@ -69,6 +78,7 @@ int	exec_mid(t_cmd *cmd)
 		perfect_child(cmd);
 	else
 	{
+		set_pid(cpid);
 		close(cmd->fd[1]);
 		close(cmd->prev->fd[0]);
 		while (wait(&cpid) > 0)
@@ -92,6 +102,7 @@ int	exec_last(t_cmd *cmd)
 		last_child(cmd); //!
 	else
 	{
+		set_pid(cpid);
 		close(cmd->fd[0]); // !
 		close(cmd->fd[1]);// !
 		while (wait(&cpid) > 0)
