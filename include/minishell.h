@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:45:30 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/22 20:48:16 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/23 21:59:09 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,7 @@ int		cpy_size_to_char(char **dst, char *src, int *start, char *search);
 int		is_builtin(t_cmd *cmd);
 int		count_args(char	*str, int i);
 int		strcmp_quote(char *str, char *find);
+void	expand_args(t_cmd *cmd);
 
 // builtin
 
@@ -113,8 +114,7 @@ void	simple_builtin(t_cmd *cmd);
 
 // path
 
-char	**get_path(t_env *env);
-char	*join_path(char *exec, char *path);
+char	**get_path(t_env *env, int i, int d);
 void	exec_lonely_path(t_cmd *cmd, char **env_tab);
 int		exec_path(t_cmd *cmd);
 
@@ -161,12 +161,6 @@ char	*dollar_expand_return_fucktion(char *full_res, int d);
 
 void	remove_quotes(char *str);
 
-// dans le main.c
-void	env_clear(t_env *env);
-
-// dans lst_inst_utils.c
-void	cmd_clear(t_cmd *cmd);
-
 //pid
 
 void	set_pid(int pid);
@@ -175,5 +169,20 @@ void	init_pid();
 //signals
 
 void	signals(void);
+
+//error
+
+int		return_error(int ret);
+
+//clear
+
+void	envtab_clear(char **env_tab);
+void	env_clear(t_env *env);
+void	cmd_clear(t_cmd *cmd);
+
+//path_utility
+
+int	path_count(char *str);
+char	*join_path(char *exec, char *path);
 
 #endif

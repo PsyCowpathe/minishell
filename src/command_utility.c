@@ -6,13 +6,13 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/29 16:57:58 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/17 17:26:58 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/23 21:59:16 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		strcmp_quote(char *str, char *find)
+int	strcmp_quote(char *str, char *find)
 {
 	int		i;
 	int		d;
@@ -80,4 +80,16 @@ int	count_args(char	*str, int i)
 		count++;
 	}
 	return (count);
+}
+
+void	expand_args(t_cmd *cmd)
+{
+	int		i;
+
+	i = 1;
+	while (cmd->args[i])
+	{
+		cmd->args[i] = dollar_expand(cmd->args[i], cmd->env, 0, 0);
+		i++;
+	}
 }

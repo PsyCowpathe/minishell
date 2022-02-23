@@ -6,13 +6,13 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/17 15:38:11 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/21 17:46:17 by agoublai         ###   ########lyon.fr   */
+/*   Updated: 2022/02/23 21:59:15 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		env_count(t_env *env)
+int	env_count(t_env *env)
 {
 	int		count;
 	t_env	*save;

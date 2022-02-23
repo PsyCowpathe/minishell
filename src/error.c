@@ -1,34 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pid.c                                              :+:      :+:    :+:   */
+/*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/22 17:09:50 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/23 21:59:09 by agirona          ###   ########lyon.fr   */
+/*   Created: 2022/02/23 21:23:46 by agirona           #+#    #+#             */
+/*   Updated: 2022/02/23 21:59:17 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include	"minishell.h"
+#include "minishell.h"
 
-void	set_pid(int pid)
+int		return_error(int ret)
 {
-	int		i;
-
-	i = 0;
-	while (i < 1024 && g_pid_t[i] != 0)
-		i++;
-	g_pid_t[i] = pid;
-}
-
-void	init_pid(void)
-{
-	int		i;
-
-	i = 0;
-	g_pid_t[1024] = 0;
-	g_pid_t[1025] = 0;
-	while (i < 1024)
-		g_pid_t[i++] = 0;
+	if (ret == -3)
+		ft_putstr("Error: J'ai po reussi a creer :(\n");
+	else if (ret == -18)
+		ft_putstr("Error: J'ai pas reussi a creer\n");
+	return (ret);
 }

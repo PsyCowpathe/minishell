@@ -1,34 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pid.c                                              :+:      :+:    :+:   */
+/*   path_utility.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/22 17:09:50 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/23 21:59:09 by agirona          ###   ########lyon.fr   */
+/*   Created: 2022/02/23 21:43:42 by agirona           #+#    #+#             */
+/*   Updated: 2022/02/23 21:59:11 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include	"minishell.h"
+#include "minishell.h"
 
-void	set_pid(int pid)
+int	path_count(char *str)
 {
 	int		i;
+	int		count;
 
 	i = 0;
-	while (i < 1024 && g_pid_t[i] != 0)
+	count = 1;
+	while (str[i])
+	{
+		if (str[i] == ':')
+			count++;
 		i++;
-	g_pid_t[i] = pid;
+	}
+	return (count);
 }
 
-void	init_pid(void)
+char	*join_path(char *exec, char *path)
 {
-	int		i;
+	char	*new_exec;
+	char	*ret;
+	char	*tmp;
 
-	i = 0;
-	g_pid_t[1024] = 0;
-	g_pid_t[1025] = 0;
-	while (i < 1024)
-		g_pid_t[i++] = 0;
+	new_exec = ft_strtrim(exec, "\"\'");
+	tmp = ft_strjoin("/", new_exec);
+	ret = ft_strjoin(path, tmp);
+	free(new_exec);
+	free(tmp);
+	return (ret);
 }

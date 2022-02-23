@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/30 18:25:49 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/22 15:39:58 by agoublai         ###   ########lyon.fr   */
+/*   Updated: 2022/02/23 21:59:17 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,48 +97,6 @@ void	exec_exit(t_cmd *cmd)
 	else
 		exit(0);
 }
-
-/*int		relative(t_cmd *cmd, char *pwd)
-{
-	int		i;
-	int		d;
-
-	i = 0;
-	d = 0;
-	while (pwd[d])
-		d++;
-	while (cmd->args[1][i])
-	{
-		if (cmd->args[1][i] == '.' && cmd->args[1][i + 1] == '/')
-			i = i + 2;
-		else if (cmd->args[1][i + 2] && cmd->args[1][i] == '.'
-			&& cmd->args[1][i + 1] == '.' && cmd->args[1][i + 2] == '/')
-		{
-			d = 0;
-			while (pwd[d] && pwd[d] != '/')
-				d--;
-		}
-	}
-}
-
-void	exec_cd(t_cmd *cmd)
-{
-	struct stat path_stat;
-	t_env	*current;
-	char	*tmp;
-
-    stat(cmd->args[1], &path_stat);
-    if (S_ISDIR(path_stat.st_mode) == 1)
-	{
-		while (current && ft_strcmp(current->key, "PWD") == 0)
-			current = current->next;
-		tmp = ft_strdup(current->value);
-		if (cmd->args[1][0] == '.')
-			relative(cmd, tmp);
-	}
-	else
-		ft_putstr("Error: No such file or directory\n");
-}*/
 
 void	simple_builtin(t_cmd *cmd)
 {

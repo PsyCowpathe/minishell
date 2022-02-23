@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 15:23:48 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/22 20:48:13 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/23 21:59:14 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,8 @@ void	exec_lonely(t_cmd *cmd, t_inst *inst)
 {
 	pid_t	cpid;
 	char	**env_tab;
-	//int		j = 0;
-	(void) inst;
 
+	(void)inst;
 	if (cmd->is_valid != 1) //on regarde
 		return ;
 	cpid = fork();
@@ -26,6 +25,8 @@ void	exec_lonely(t_cmd *cmd, t_inst *inst)
 	{
 		create_input_redirection(cmd);
 		create_output_redirection(cmd);
+		if (cmd->exec == NULL)
+			exit(0);
 		env_tab = build_env_tab(cmd);
 		cmd->ret[0] = execve(cmd->exec, cmd->args, env_tab);
 		if (cmd->ret[0] == -1)

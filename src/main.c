@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:45:25 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/22 20:48:17 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/23 21:59:19 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,43 +59,17 @@ void	exec_line(t_inst *inst, char *input, int *i, t_env *env)
 	}
 }
 
-void	env_clear(t_env *env)
+void	minishell(t_env *env)
 {
-	t_env	*next;
-
-	while (env)
-	{
-		next = env->next;
-		if (env->str)
-			free(env->str);
-		if (env->key)
-			free(env->key);
-		if (env->value)
-			free(env->value);
-		free(env);
-		env = next;
-	}
-}
-
-int	main(int argc, char **argv, char *const envp[])
-{
+	t_inst	inst;
+	int		i;
 	int		exec_ret;
 	char	*input;
-	int		i;
-	int		d;
-	t_inst	inst;
-	t_env	*env;
 
-	(void)argc;
-	(void)argv;
 	exec_ret = 0;
-	env = create_env_lst(envp);
-	signals();
-	d = 0;
 	while (exec_ret == 0)
 	{
 		init_pid(); //faudra split
-		d++;
 		i = 0;
 		input = readline("minishell$> ");
 		if (input == NULL)
@@ -105,8 +79,19 @@ int	main(int argc, char **argv, char *const envp[])
 			exec_line(&inst, input, &i, env);
 		free(input);
 	}
+}
+
+int	main(int argc, char **argv, char *const envp[])
+{
+	t_env	*env;
+
+	(void)argc;
+	(void)argv;
+	env = create_env_lst(envp);
+	signals();
+	minishell(env);
 	if (env)
 		env_clear(env);
-	//rl_clear_history();
+	rl_clear_history();
 	return (0);
 }

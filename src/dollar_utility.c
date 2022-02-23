@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 15:54:04 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/22 15:15:39 by agoublai         ###   ########lyon.fr   */
+/*   Updated: 2022/02/23 21:59:15 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	join_all_part(char *res, char **full_res, char *str, int *d)
 	free(*full_res);
 	if (new_malloc((void **)full_res, sizeof(char), ft_strlen(str)
 			+ ft_strlen(tmp) + 1) == 0)
-		return ; //error
+		return ;//error
 	ft_strncpy(*full_res, tmp, ft_strlen(tmp) + 1);
 }
 

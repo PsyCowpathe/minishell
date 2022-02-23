@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 17:49:26 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/21 15:30:40 by agoublai         ###   ########lyon.fr   */
+/*   Updated: 2022/02/23 21:59:10 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,36 +23,9 @@ t_inst	*instnew(char *content)
 	return (new);
 }
 
-void	cmd_clear(t_cmd *cmd)
-{
-	if (cmd->ret)
-		free(cmd->ret);
-	if (cmd->str)
-		free(cmd->str);
-	if (cmd->exec)
-		free(cmd->exec);
-	if (cmd->args)
-	{
-		int i = 1;
-		while (cmd->args[i])
-		{
-			if (cmd->args[i])
-				free(cmd->args[i]);
-			i++;
-		}
-		free(cmd->args);
-	}
-	if (cmd->redir_in)
-		free(cmd->redir_in);
-	if (cmd->redir_out)
-		free(cmd->redir_out);
-	free(cmd);
-}
-
 void	instclear(t_inst *inst)
 {
 	t_cmd	*next;
-
 
 	if (inst)
 	{
