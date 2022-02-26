@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 16:35:29 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/26 03:07:15 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/26 22:28:05 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	get_echo_flag(t_cmd *cmd, char *str, int i)
 	return (save);
 }
 
-void	cut_exec(t_cmd *cmd, int *i)
+int	cut_exec(t_cmd *cmd, int *i)
 {
 	char	*fragment;
 	int		size;
@@ -49,13 +49,16 @@ void	cut_exec(t_cmd *cmd, int *i)
 		(*i)++;
 	size = size_to_char(cmd->str, *i, " \r\n\v\t\f");
 	if (size == -1)
-		return ;
+		return (-1);
 	fragment = malloc(sizeof(char) * (size + 1));
 	if (fragment == NULL)
-		return ;
+		return (-2);
 	cpy_instruction(fragment, cmd->str, i, size);
 	cmd->exec = ft_strdup(fragment);
 	free(fragment);
+	if (cmd->exec = NULL)
+		return (-2);
+	return (0);
 }
 
 int	cut_args(t_cmd *cmd, int j, int *i, int ret)
@@ -94,10 +97,10 @@ int	get_args(t_cmd *cmd, int i)
 	j = 1;
 	cmd->args = malloc(sizeof(char *) * (count_args(cmd->str, i) + 2));
 	if (cmd->args == NULL)
-		return (-1);
+		return (-2);
 	cmd->args[0] = malloc(sizeof(char) * 1);
 	if (cmd->args[0] == NULL)
-		return (-1);
+		return (-2);
 	cmd->args[0][0] = '\0';
 	cmd->args[1] = NULL;
 	while (ft_iswhitespace(cmd->str[i]) == 1)
@@ -124,12 +127,18 @@ int	cut_command(t_cmd *cmd)
 	while (cmd->str[i] && ret == 1)
 	{
 		ret = cut_redir(cmd, &i);
+		if (ret == -2)
+			return (return_perror(-1, "error ", ENOMEM));
 		if (ret < 0)
 			return (0);
 	}
-	cut_exec(cmd, &i);
-	if (strcmp_quote(cmd->exec, "echo") == 1) // on le decale dans le is_builtin
-		i = get_echo_flag(cmd, cmd->str, i);
+	ret = cut_exec(cmd, &i);
+	if (ret == -2)
+		return (return_perror(-1, "error ", ENOMEM));
+	if (ret < 0)
+		return (0);
+	/*if (strcmp_quote(cmd->exec, "echo") == 1) // on le decale dans le is_builtin
+		i = get_echo_flag(cmd, cmd->str, i);*/
 	cmd->builtin = is_builtin(cmd);
 	if (get_args(cmd, i) <= 0)
 		return (0);
@@ -137,7 +146,7 @@ int	cut_command(t_cmd *cmd)
 	free(cmd->args[0]);
 	cmd->args[0] = cmd->exec;
 	expand_args(cmd);
-	if (cmd->args[0][0] == '/' || cmd->args[0][0] == '.')
+	if (cmd->args [0] && (cmd->args[0][0] == '/' || cmd->args[0][0] == '.'))
 		cmd->is_path = 1;
 	cmd->is_valid = 1;
 	return (1);

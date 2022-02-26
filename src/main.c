@@ -6,11 +6,13 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:45:25 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/26 03:07:15 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/26 22:28:12 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+pid_t	g_pid_t[1025] = {0};
 
 int	cut_input(t_inst **inst, char *input, int *i)
 {
@@ -23,24 +25,33 @@ int	cut_input(t_inst **inst, char *input, int *i)
 		return (0);
 	size = size_to_char(input, *i, ";");
 	if (size == -1)
-		return (-1);
+		return (0);
 	if (new_malloc((void **)&instruction, sizeof(char), size + 1) == 0)
 		return (-1);
 	cpy_instruction(instruction, input, i, size);
 	*inst = instnew(instruction);
+	if (*inst == NULL)
+	{
+		free(instruction);
+		return (-1);
+	}
 	if (input[*i] == ';')
 		*i = *i + 1;
 	return (1);
 }
 
-void	exec_line(t_inst *inst, char *input, int *i, t_env *env)
+int	exec_line(t_inst *inst, char *input, int *i, t_env *env)
 {
+	int		ret;
+
 	while (input[*i])
 	{
-		if (cut_input(&inst, input, i) != 1)
-			return ;
-		if (cut_instruction(inst, env) != 1)
-			return ;
+		ret = cut_input(&inst, input, i);
+		if (ret != 1)
+			return (ret);
+		ret = cut_instruction(inst, env);
+		if (ret != 1)
+			return (ret);
 		//builting_detection;
 		//print_debug(inst); //deletee
 		if (inst->cmds->next == NULL)
@@ -57,6 +68,7 @@ void	exec_line(t_inst *inst, char *input, int *i, t_env *env)
 			instclear(inst);
 		}
 	}
+	return (1);
 }
 
 void	minishell(t_env *env)
@@ -67,7 +79,6 @@ void	minishell(t_env *env)
 	char	*input;
 
 	exec_ret = 0;
-	g_pid_t[1024] = 0;
 	while (exec_ret == 0)
 	{
 		init_pid();
@@ -75,9 +86,11 @@ void	minishell(t_env *env)
 		input = readline("minishell$> ");
 		if (input == NULL)
 			exec_ret = 1;
-		add_history(input);
-		if (input)
-			exec_line(&inst, input, &i, env);
+		else if (input[0])
+			add_history(input);
+		if (input && input[0])
+			if (exec_line(&inst, input, &i, env) == -1)
+				exec_ret = 1;
 		free(input);
 	}
 }
@@ -89,7 +102,13 @@ int	main(int argc, char **argv, char *const envp[])
 	(void)argc;
 	(void)argv;
 	env = create_env_lst(envp);
-	signals();
+	if (env == NULL)
+		return (1);
+	if (signals() != 1)
+	{
+		envclear(&env);
+		return (1);
+	}
 	minishell(env);
 	if (env)
 		env_clear(env);

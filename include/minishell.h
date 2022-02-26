@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:45:30 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/26 03:07:14 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/26 22:28:11 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 #include <signal.h>
 #include <errno.h>
 
-pid_t	g_pid_t[1025];
+extern pid_t	g_pid_t[1025];
 
 typedef struct s_env
 {
@@ -156,7 +156,7 @@ char	*dollar_expand(char *str, t_env *env, int i, int d);
 
 int		search_key(t_env *env, char *key, char **res);
 int		trigger(char c, int state);
-void	join_all_part(char *res, char **full_res, char *str, int *d);
+int		join_all_part(char *res, char **full_res, char *str, int *d);
 char	*dollar_expand_return_fucktion(char *full_res, int d);
 
 //quote
@@ -170,11 +170,12 @@ void	init_pid();
 
 //signals
 
-void	signals(void);
+int	signals(void);
 
 //error
 
 int		return_error(int ret);
+int		return_perror(int ret, char *msg, int code);
 
 //clear
 

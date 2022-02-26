@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 16:30:33 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/16 15:35:07 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/26 22:28:09 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,7 @@ int	size_to_char(char *input, int i, char *find)
 		{
 			c = input[i];
 			if (is_closed_quote(input, i) == 0)
-			{
-				ft_putstr("Error: Unclosed quotes\n");
-				return (-1); //verifier strerror;
-			}
+				return (return_error(-1));
 			i++;
 			size++;
 			while (input[i] && input[i] != c && ++i)
@@ -76,7 +73,7 @@ int	cpy_size_to_char(char **dst, char *src, int *start, char *search)
 
 	size = size_to_char(src, *start, search);
 	if (size == -1)
-		return (-14);
+		return (0);
 	*dst = malloc(sizeof(char) * (size + 1));
 	if (*dst == NULL)
 		return (-1);

@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 15:54:04 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/26 03:07:13 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/26 22:28:08 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ int	search_key(t_env *env, char *key, char **res)
 			if (env->set == 1)
 			{
 				*res = ft_strdup(env->value);
+				if (*res == NULL)
+					return (-1);
 				return (1);
 			}
 			*res = NULL;
@@ -48,12 +50,14 @@ int	search_key(t_env *env, char *key, char **res)
 	return (0);
 }
 
-void	join_all_part(char *res, char **full_res, char *str, int *d)
+int join_all_part(char *res, char **full_res, char *str, int *d)
 {
 	char	*tmp;
 
 	(*full_res)[*d] = '\0';
 	tmp = ft_strjoin(*full_res, res);
+	if (tmp == NULL)
+		return (-2);
 	*d += ft_strlen(res);
 	if (tmp[0] == '\0')
 		*d = 0;
@@ -61,14 +65,14 @@ void	join_all_part(char *res, char **full_res, char *str, int *d)
 	free(*full_res);
 	if (new_malloc((void **)full_res, sizeof(char), ft_strlen(str)
 			+ ft_strlen(tmp) + 1) == 0)
-		return ;//error
+		return (-2);
 	ft_strncpy(*full_res, tmp, ft_strlen(tmp) + 1);
+	return (1);
 }
 
 char	*dollar_expand_return_fucktion(char *full_res, int d)
 {
 	full_res[d] = '\0';
-	//free(str);
 	if (full_res[0] != '\0')
 	{
 		remove_quotes(full_res);

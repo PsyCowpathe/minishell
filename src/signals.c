@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 17:11:52 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/25 20:44:15 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/26 17:31:43 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,14 +83,15 @@ static void	handler(int signum)
 		sigquit_handler();
 }
 
-void	signals(void)
+int	signals(void)
 {
 	struct sigaction	sa;
 
 	sa.sa_handler = handler;
 	sa.sa_flags = SA_RESTART;
 	if (sigaction(SIGINT, &sa, NULL) == -1)
-		; //error
+		return (return_perror(-1, "error ", EFAULT));
 	if (sigaction(SIGQUIT, &sa, NULL) == -1)
-		;//error
+		return (return_perror(-1, "error ", EFAULT));
+	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 17:49:26 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/25 23:08:08 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/26 18:03:14 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,10 @@ t_inst	*instnew(char *content)
 	t_inst	*new;
 
 	if (new_malloc((void *)&new, sizeof(t_inst), 1) == 0)
+	{
+		return_perror(-1, "error ", ENOMEM);
 		return (NULL);
+	}
 	new->str = content;
 	new->cmds = NULL;
 	return (new);

@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 14:38:55 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/26 03:07:13 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/26 22:28:07 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,18 +26,19 @@ char	*difficult_protocol(t_env *env, char *str, int *i, int state)
 	if (state == 0 && str[*i] && ft_ischar("\r\n\v\t\f \'\"", str[*i]) == 1)
 	{
 		if (new_malloc((void *)&res, sizeof(char), 1) == 0)
-			return (NULL); //error
+			return (NULL);
 		res[0] = '\0';
 		return (res);
 	}
 	if (cpy_size_to_char(&key, str, i, "\r\n\v\t\f \'\"") != 1)
-	{
-		return (NULL); //error
-	}
-	if (search_key(env, key, &res) == 0)
+		return (NULL);
+	state = search_key(env, key, &res);
+	if (state == -1)
+		return (NULL);
+	if (state == 0)
 	{
 		if (new_malloc((void *)&res, sizeof(char), 1) == 0)
-			return (NULL); //error
+			return (NULL);
 		res[0] = '\0';
 		return (res);
 	}
@@ -48,11 +49,11 @@ char	*simple_protocol(t_env *env, char *str, int *i, int state)
 {
 	char	*res;
 
-	if (state == 2
+	if (state == 2 || (state == 0 && !str[*i + 1])
 		|| (state == 1 && (str[(*i) + 1] == '\"' || str[(*i) + 1] == '\'')))
 	{
 		if (new_malloc((void *)&res, sizeof(char), 1 + 1) == 0)
-			return (NULL); //error
+			return (NULL);
 		res[0] = '$';
 		res[1] = '\0';
 		*i = *i + 1;
@@ -75,7 +76,7 @@ char	*dollar_expand(char *str, t_env *env, int i, int d)
 
 	state = 0;
 	if (new_malloc((void *)&full_res, sizeof(char), ft_strlen(str) + 1) == 0)
-		return (NULL); //error
+		return (NULL);
 	while (str[i])
 	{
 		if (str[i] == '\'' || str[i] == '\"')
@@ -86,12 +87,21 @@ char	*dollar_expand(char *str, t_env *env, int i, int d)
 		if (str[i] == '$')
 		{
 			res = simple_protocol(env, str, &i, state);
+			if (res == NULL)
+			{
+				free(full_res);
+				return ((char*)1);
+			}
 			if (res[0] == '\0')
 			{
 				full_res[0] = '\0';
 				return (full_res);
 			}
-			join_all_part(res, &full_res, str, &d);
+			if (join_all_part(res, &full_res, str, &d) == -2)
+			{
+				free(full_res);
+				return ((char*)1);
+			}
 		}
 		else if (str[i])
 			full_res[d++] = str[i++];
