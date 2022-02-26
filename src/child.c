@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 16:03:55 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/22 14:21:26 by agoublai         ###   ########lyon.fr   */
+/*   Updated: 2022/02/26 01:37:57 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,12 @@ void	first_child(t_cmd *cmd)
 	if (cmd->builtin > 0)
 		;//simple->builtin();
 	else if (exec_path(cmd) == 0)
-		ft_putstr("Error: Incorrect command or path\n");
+	{
+		perror("Error");
+		if (errno == 13 || errno == 20)
+			exit(126);
+		exit(127);
+	}
 	exit(0);
 }
 
@@ -37,7 +42,12 @@ void	last_child(t_cmd *cmd)
 	if (cmd->builtin > 0)
 		;//simple->builtin();
 	else if (exec_path(cmd) == 0)
-		ft_putstr("Error: Incorrect command or path\n");
+	{
+		perror("Error");
+		if (errno == 13 || errno == 20)
+			exit(126);
+		exit(127);
+	}
 	exit(0);
 }
 
@@ -52,6 +62,11 @@ void	perfect_child(t_cmd *cmd)
 	if (cmd->builtin > 0)
 		;//simple->builtin();
 	else if (exec_path(cmd) == 0)
-		ft_putstr("Error: Incorrect command or path\n");
+	{
+		perror("Error");
+		if (errno == 13 || errno == 20)
+			exit(126);
+		exit(127);
+	}
 	exit(0);
 }

@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/29 16:57:58 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/23 21:59:16 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/26 03:07:12 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,23 @@ int	count_args(char	*str, int i)
 	return (count);
 }
 
+void	shift_args(t_cmd *cmd, int i)
+{
+	int		j;
+
+	j = i;
+	while (cmd->args[i] && cmd->args[i][0] == '\0')
+		i++;
+	while (cmd->args[i] && cmd->args[i][0] != '\0')
+	{
+		cmd->args[j] = ft_strdup(cmd->args[i]);
+		free(cmd->args[i]);
+		cmd->args[i] = ft_strdup("\0");
+		i++;
+		j++;
+	}
+}
+
 void	expand_args(t_cmd *cmd)
 {
 	int		i;
@@ -90,6 +107,13 @@ void	expand_args(t_cmd *cmd)
 	while (cmd->args[i])
 	{
 		cmd->args[i] = dollar_expand(cmd->args[i], cmd->env, 0, 0);
+		i++;
+	}
+	i = 1;
+	while (cmd->args[i])
+	{
+		if (cmd->args[i][0] == '\0')
+			shift_args(cmd, i);
 		i++;
 	}
 }

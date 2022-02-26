@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 16:35:29 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/23 21:59:16 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/26 03:07:15 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ int	get_args(t_cmd *cmd, int i)
 	if (cmd->args[0] == NULL)
 		return (-1);
 	cmd->args[0][0] = '\0';
+	cmd->args[1] = NULL;
 	while (ft_iswhitespace(cmd->str[i]) == 1)
 		i++;
 	while (cmd->str[i])
@@ -136,6 +137,8 @@ int	cut_command(t_cmd *cmd)
 	free(cmd->args[0]);
 	cmd->args[0] = cmd->exec;
 	expand_args(cmd);
+	if (cmd->args[0][0] == '/' || cmd->args[0][0] == '.')
+		cmd->is_path = 1;
 	cmd->is_valid = 1;
 	return (1);
 }

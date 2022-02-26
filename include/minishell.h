@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:45:30 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/23 21:59:09 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/26 03:07:14 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,9 @@
 # include <fcntl.h>
 #include <sys/stat.h>
 #include <signal.h>
+#include <errno.h>
 
-pid_t	g_pid_t[1026];
+pid_t	g_pid_t[1025];
 
 typedef struct s_env
 {
@@ -40,6 +41,7 @@ typedef struct s_cmd
 	int				builtin;
 	char			*str;
 	char			*exec;
+	int				is_path;
 	int				echo_flag;
 	char			**args;
 	int				fd[2];

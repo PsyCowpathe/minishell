@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 14:38:55 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/22 15:15:45 by agoublai         ###   ########lyon.fr   */
+/*   Updated: 2022/02/26 03:07:13 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,11 @@ char	*simple_protocol(t_env *env, char *str, int *i, int state)
 		*i = *i + 1;
 		return (res);
 	}
+	if (str[(*i) + 1] == '?' && ft_iswhitespace(str[(*i) + 2]) == 0)
+	{
+		*i = *i + 2;
+		return (ft_itoa(g_pid_t[1024]));
+	}
 	*i = *i + 1;
 	return (difficult_protocol(env, str, i, state));
 }
@@ -81,6 +86,11 @@ char	*dollar_expand(char *str, t_env *env, int i, int d)
 		if (str[i] == '$')
 		{
 			res = simple_protocol(env, str, &i, state);
+			if (res[0] == '\0')
+			{
+				full_res[0] = '\0';
+				return (full_res);
+			}
 			join_all_part(res, &full_res, str, &d);
 		}
 		else if (str[i])

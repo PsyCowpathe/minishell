@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 17:49:26 by agirona           #+#    #+#             */
-/*   Updated: 2021/12/17 15:57:46 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/25 23:26:21 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ t_cmd	*cmdnew(char *content, t_env *env)
 	new->builtin = 0;
 	new->str = content;
 	new->exec = NULL;
+	new->is_path = 0;
 	new->echo_flag = 0;
 	new->args = NULL;
 	new->redir_type[0] = 0;

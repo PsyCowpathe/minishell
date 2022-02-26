@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 19:06:46 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/23 21:59:07 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/25 23:08:00 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,11 +73,11 @@ int	odd_behaviour(t_cmd *cmd, int *i)
 	return (0);
 }
 
-void	is_redir(t_cmd *cmd, int *i, int *ret)
+int	is_redir(t_cmd *cmd, int *i, int *ret)
 {
 	*ret = check_redirection(cmd, *i);
 	if (*ret != 1)
-		return;
+		return (*ret);
 	*ret = 0;
 	if (cmd->str[*i] == '<')
 	{
@@ -95,6 +95,7 @@ void	is_redir(t_cmd *cmd, int *i, int *ret)
 		else
 			*ret = 4;
 	}
+	return (*ret);
 }
 
 int	free_fragment(char *fragment, int ret)

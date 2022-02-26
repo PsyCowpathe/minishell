@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/30 18:26:48 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/23 21:59:12 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/26 01:31:30 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,18 +55,19 @@ void	exec_lonely_path(t_cmd *cmd, char **env_tab)
 		tmp = join_path(cmd->exec, path[i]);
 		cmd->ret[0] = execve(tmp, cmd->args, env_tab);
 		free(tmp);
-		if (cmd->ret[0] == 0)
+	/*	if (cmd->ret[0] == 0)
 		{
 			envtab_clear(path);
 			envtab_clear(env_tab);
-			exit(0);
-		}
+			exit(127);
+		}*/
 		i++;
 	}
 	if (cmd->ret[0] == -1)
-		ft_putstr("Error: command not found\n");
+		perror(NULL);
 	envtab_clear(path);
 	envtab_clear(env_tab);
+	exit(127);
 }
 
 int	test_all_path(t_cmd *cmd, char	**env_tab)
@@ -83,12 +84,6 @@ int	test_all_path(t_cmd *cmd, char	**env_tab)
 		tmp = join_path(cmd->exec, path[i]);
 		cmd->ret[0] = execve(tmp, cmd->args, env_tab);
 		free(tmp);
-		if (cmd->ret[0] == 0)
-		{
-			envtab_clear(path);
-			envtab_clear(env_tab);
-			exit(0);
-		}
 		i++;
 	}
 	envtab_clear(path);
@@ -102,13 +97,5 @@ int	exec_path(t_cmd *cmd)
 
 	env_tab = build_env_tab(cmd);
 	cmd->ret[0] = execve(cmd->exec, cmd->args, env_tab);
-	if (cmd->ret[0] == 0)
-	{
-		envtab_clear(env_tab);
-		exit(0);
-	}
-	else
-		return (test_all_path(cmd, env_tab));
-	envtab_clear(env_tab);
-	return (1);
+	return (test_all_path(cmd, env_tab));
 }

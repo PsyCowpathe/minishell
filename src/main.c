@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:45:25 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/23 21:59:19 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/26 03:07:15 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,9 +67,10 @@ void	minishell(t_env *env)
 	char	*input;
 
 	exec_ret = 0;
+	g_pid_t[1024] = 0;
 	while (exec_ret == 0)
 	{
-		init_pid(); //faudra split
+		init_pid();
 		i = 0;
 		input = readline("minishell$> ");
 		if (input == NULL)
