@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 17:49:26 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/26 20:59:36 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/27 04:39:56 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ t_cmd	*cmdnew(char *content, t_env *env)
 	new->ret = malloc(4);
 	if (new->ret == NULL)
 		return (NULL);
-	new->is_valid = 0;
 	new->ret[0] = 0;
 	new->builtin = 0;
 	new->str = content;
@@ -65,21 +64,5 @@ void	cmdadd_back(t_cmd **alst, t_cmd *new)
 		last = cmdlast(*alst);
 		last->next = new;
 		new->prev = last;
-	}
-}
-
-void	cmdclear(t_cmd **lst)
-{
-	t_cmd	*next;
-
-	while (*lst)
-	{
-		next = (*lst)->next;
-		if ((*lst)->str)
-			free((*lst)->str);
-		//if (*lst->cmds)
-			// a free
-		free(*lst);
-		*lst = next;
 	}
 }

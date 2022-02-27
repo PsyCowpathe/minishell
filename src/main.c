@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:45:25 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/26 22:28:12 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/27 05:10:49 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,25 +48,40 @@ int	exec_line(t_inst *inst, char *input, int *i, t_env *env)
 	{
 		ret = cut_input(&inst, input, i);
 		if (ret != 1)
+		{
+			if (inst)
+				instclear(inst);
 			return (ret);
-		ret = cut_instruction(inst, env);
+		}
+		ret = cut_instruction(inst, env, 0, 0);
 		if (ret != 1)
+		{
+			instclear(inst);
 			return (ret);
+		}
 		//builting_detection;
-		//print_debug(inst); //deletee
 		if (inst->cmds->next == NULL)
 		{
 			if (inst->cmds->builtin > 0)
 				simple_builtin(inst->cmds);
 			else
-				exec_lonely(inst->cmds, inst);
-			instclear(inst);
+			{
+				if (exec_lonely(inst->cmds) == -1)
+				{
+					instclear(inst);
+					return (-1);
+				}
+			}
 		}
 		else
 		{
-			exec_pipe(inst->cmds);
-			instclear(inst);
+			if (exec_pipe(inst->cmds) == -1)
+			{
+				instclear(inst);
+				return (-1);
+			}
 		}
+		instclear(inst);
 	}
 	return (1);
 }
@@ -106,7 +121,7 @@ int	main(int argc, char **argv, char *const envp[])
 		return (1);
 	if (signals() != 1)
 	{
-		envclear(&env);
+		env_clear(env);
 		return (1);
 	}
 	minishell(env);

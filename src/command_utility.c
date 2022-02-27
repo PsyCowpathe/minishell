@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/29 16:57:58 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/26 03:07:12 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/27 01:03:02 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	count_args(char	*str, int i)
 	return (count);
 }
 
-void	shift_args(t_cmd *cmd, int i)
+int	shift_args(t_cmd *cmd, int i)
 {
 	int		j;
 
@@ -92,14 +92,19 @@ void	shift_args(t_cmd *cmd, int i)
 	while (cmd->args[i] && cmd->args[i][0] != '\0')
 	{
 		cmd->args[j] = ft_strdup(cmd->args[i]);
+		if (cmd->args[j] == NULL)
+			return (-2);
 		free(cmd->args[i]);
 		cmd->args[i] = ft_strdup("\0");
+		if (cmd->args[i] == NULL)
+			return (-2);
 		i++;
 		j++;
 	}
+	return (1);
 }
 
-void	expand_args(t_cmd *cmd)
+int	expand_args(t_cmd *cmd)
 {
 	int		i;
 
@@ -107,13 +112,17 @@ void	expand_args(t_cmd *cmd)
 	while (cmd->args[i])
 	{
 		cmd->args[i] = dollar_expand(cmd->args[i], cmd->env, 0, 0);
+		if (cmd->args[i] == (char *)1)
+			return (return_perror(-2, "error ", ENOMEM));
 		i++;
 	}
 	i = 1;
 	while (cmd->args[i])
 	{
 		if (cmd->args[i][0] == '\0')
-			shift_args(cmd, i);
+			if (shift_args(cmd, i) == -2)
+				return (return_perror(-2, "error ", ENOMEM));
 		i++;
 	}
+	return (1);
 }

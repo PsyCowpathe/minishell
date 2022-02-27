@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/17 15:38:11 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/23 21:59:15 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/27 02:52:15 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,11 @@ char	**build_env_tab(t_cmd *cmd)
 	while (cmd->env)
 	{
 		if (cmd->env->set == 1)
+		{
 			res[i] = ft_strdup(cmd->env->str);
+			if (res[i] == NULL)
+				return (NULL);
+		}
 		i++;
 		cmd->env = cmd->env->next;
 	}

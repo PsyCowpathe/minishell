@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 19:06:46 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/26 22:28:05 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/27 04:37:57 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,9 @@ int	check_redirection(t_cmd *cmd, int i)
 	while (ft_iswhitespace(cmd->str[i]) == 1)
 		i++;
 	if (trigger == 1 && !cmd->str[i])
-			return (return_error(-2));
+		return (return_error(-2));
 	if (ft_ischar("><", cmd->str[i]) == 1)
-			return (return_error(-2));
+		return (return_error(-2));
 	return (1);
 }
 

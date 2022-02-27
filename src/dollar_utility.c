@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 15:54:04 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/26 22:28:08 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/27 04:37:49 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	search_key(t_env *env, char *key, char **res)
 	return (0);
 }
 
-int join_all_part(char *res, char **full_res, char *str, int *d)
+int	join_all_part(char *res, char **full_res, char *str, int *d)
 {
 	char	*tmp;
 

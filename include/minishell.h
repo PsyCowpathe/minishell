@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:45:30 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/26 22:28:11 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/27 05:10:48 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ typedef struct s_env
 
 typedef struct s_cmd
 {
-	int				is_valid;
 	int				*ret;
 	int				builtin;
 	char			*str;
@@ -62,7 +61,7 @@ typedef struct s_inst
 
 // instruction
 
-int	cut_instruction(t_inst *inst, t_env *env);
+int	cut_instruction(t_inst *inst, t_env *env, int i, int ret);
 
 //command
 
@@ -77,7 +76,6 @@ void	instclear(t_inst *lst);
 
 t_cmd	*cmdnew(char *content, t_env *env);
 void	cmdadd_back(t_cmd **alst, t_cmd *new);
-void	cmdclear(t_cmd **lst);
 t_cmd	*cmdlast(t_cmd *lst);
 
 
@@ -87,13 +85,6 @@ t_env	*create_env_lst(char *const envp[]);
 t_env	*envnew(char *str);
 t_env	*envlast(t_env *lst);
 void	envadd_back(t_env **alst, t_env *new);
-void	envclear(t_env **lst);
-
-// debug															//a delete
-
-void	print_debug(t_inst *inst);
-void	print_env(void);
-void	print_path(char **path);
 
 // utility
 
@@ -107,7 +98,7 @@ int		cpy_size_to_char(char **dst, char *src, int *start, char *search);
 int		is_builtin(t_cmd *cmd);
 int		count_args(char	*str, int i);
 int		strcmp_quote(char *str, char *find);
-void	expand_args(t_cmd *cmd);
+int		expand_args(t_cmd *cmd);
 
 // builtin
 
@@ -135,14 +126,19 @@ int		create_input_redirection(t_cmd *cmd);
 
 //exec
 
-void	exec_pipe(t_cmd	*cmd);
-void	exec_lonely(t_cmd *cmd, t_inst *inst);
+int		exec_pipe(t_cmd	*cmd);
+int		exec_lonely(t_cmd *cmd);
+
+//exec_utility
+
+int		exec_last_dependency(t_cmd *cmd, pid_t cpid);
+char	**exec_lonely_dependency(t_cmd *cmd);
 
 //child
 
-void	first_child(t_cmd *cmd);
-void	last_child(t_cmd *cmd);
-void	perfect_child(t_cmd *cmd);
+int		first_child(t_cmd *cmd);
+int		last_child(t_cmd *cmd);
+int		perfect_child(t_cmd *cmd);
 
 //env
 
@@ -170,7 +166,7 @@ void	init_pid();
 
 //signals
 
-int	signals(void);
+int		signals(void);
 
 //error
 
@@ -185,7 +181,10 @@ void	cmd_clear(t_cmd *cmd);
 
 //path_utility
 
-int	path_count(char *str);
+int		path_count(char *str);
 char	*join_path(char *exec, char *path);
+
+//args
+int		get_args(t_cmd *cmd, int i);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 12:36:27 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/26 22:28:07 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/27 04:37:54 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	verif_open_in(t_cmd *cmd, char *fragment, int redir_type)
 	if (redir_type == 2)
 	{
 		fd = open(cmd->redir_in, O_RDONLY, 0644);
-		if (fd == -1 || 1)
+		if (fd == -1)
 			return (return_perror(-2, "error ", errno));
 		close(fd);
 	}
@@ -97,7 +97,6 @@ int	verif_open(t_cmd *cmd, char *fragment, int redir_type)
 			return (-1);
 		if (ret != 1)
 			return (ret);
-
 	}
 	return (1);
 }

@@ -6,13 +6,13 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 21:23:46 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/26 22:28:10 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/27 04:37:52 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		return_error(int ret)
+int	return_error(int ret)
 {
 	if (ret == -1)
 		ft_putstr_fd("error : Unclosed quotes\n", 2);
@@ -29,7 +29,7 @@ int		return_error(int ret)
 	return (ret);
 }
 
-int		return_perror(int ret, char *msg, int code)
+int	return_perror(int ret, char *msg, int code)
 {
 	errno = code;
 	perror(msg);

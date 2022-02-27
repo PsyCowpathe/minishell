@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 14:38:55 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/26 22:28:07 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/27 04:37:48 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,19 @@ char	*simple_protocol(t_env *env, char *str, int *i, int state)
 	return (difficult_protocol(env, str, i, state));
 }
 
+int	dollar_dependency(int *i, char *str, int state, char *full_res)
+{
+	int		d;
+
+	d = 0;
+	if (str[*i] == '\'' || str[*i] == '\"')
+	{
+		state = trigger(str[*i], state);
+		full_res[d++] = str[(*i)++];
+	}
+	return (d);
+}
+
 char	*dollar_expand(char *str, t_env *env, int i, int d)
 {
 	int		state;
@@ -79,28 +92,14 @@ char	*dollar_expand(char *str, t_env *env, int i, int d)
 		return (NULL);
 	while (str[i])
 	{
-		if (str[i] == '\'' || str[i] == '\"')
-		{
-			state = trigger(str[i], state);
-			full_res[d++] = str[i++];
-		}
+		d += dollar_dependency(&i, str, state, full_res + d);
 		if (str[i] == '$')
 		{
 			res = simple_protocol(env, str, &i, state);
-			if (res == NULL)
+			if (res == NULL || join_all_part(res, &full_res, str, &d) == -2)
 			{
 				free(full_res);
-				return ((char*)1);
-			}
-			if (res[0] == '\0')
-			{
-				full_res[0] = '\0';
-				return (full_res);
-			}
-			if (join_all_part(res, &full_res, str, &d) == -2)
-			{
-				free(full_res);
-				return ((char*)1);
+				return ((char *)1);
 			}
 		}
 		else if (str[i])

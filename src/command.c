@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 16:35:29 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/26 22:28:05 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/27 04:37:48 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,62 +56,30 @@ int	cut_exec(t_cmd *cmd, int *i)
 	cpy_instruction(fragment, cmd->str, i, size);
 	cmd->exec = ft_strdup(fragment);
 	free(fragment);
-	if (cmd->exec = NULL)
+	if (cmd->exec == NULL)
 		return (-2);
 	return (0);
 }
 
-int	cut_args(t_cmd *cmd, int j, int *i, int ret)
+int	command_dependency(t_cmd *cmd, int i)
 {
-	int		size;
-	char	*tmp;
+	int		ret;
 
-	while (cmd->str[*i] && ret == 1)
-	{
-		ret = cut_redir(cmd, i);
-		if (ret < 0)
-			return (-1);
-	}
-	while (ft_iswhitespace(cmd->str[*i]) == 1)
-		*i = *i + 1;
-	size = size_to_char(cmd->str, *i, " \r\n\v\t\f");
-	if (size == -1)
+	cmd->builtin = is_builtin(cmd);
+	ret = get_args(cmd, i);
+	if (ret == -1)
 		return (-1);
-	if (size == 0)
-	{
-		cmd->args[j] = NULL;
-		return (1);
-	}
-	if (new_malloc((void **)&tmp, sizeof(char), size + 1) == 0)
+	if (ret <= 0)
+		return (0);
+	cmd->exec = dollar_expand(cmd->exec, cmd->env, 0, 0);
+	if (cmd->exec == (char *)1)
+		return (return_perror(-1, "error ", ENOMEM));
+	free(cmd->args[0]);
+	cmd->args[0] = cmd->exec;
+	if (expand_args(cmd) == -2)
 		return (-1);
-	cpy_instruction(tmp, cmd->str, i, size);
-	cmd->args[j] = ft_strdup(tmp);
-	free(tmp);
-	return (1);
-}
-
-int	get_args(t_cmd *cmd, int i)
-{
-	int		j;
-
-	j = 1;
-	cmd->args = malloc(sizeof(char *) * (count_args(cmd->str, i) + 2));
-	if (cmd->args == NULL)
-		return (-2);
-	cmd->args[0] = malloc(sizeof(char) * 1);
-	if (cmd->args[0] == NULL)
-		return (-2);
-	cmd->args[0][0] = '\0';
-	cmd->args[1] = NULL;
-	while (ft_iswhitespace(cmd->str[i]) == 1)
-		i++;
-	while (cmd->str[i])
-	{
-		if (cut_args(cmd, j, &i, 1) != 1)
-			return (-1);
-		j++;
-	}
-	cmd->args[j] = NULL;
+	if (cmd->args [0] && (cmd->args[0][0] == '/' || cmd->args[0][0] == '.'))
+		cmd->is_path = 1;
 	return (1);
 }
 
@@ -137,17 +105,8 @@ int	cut_command(t_cmd *cmd)
 		return (return_perror(-1, "error ", ENOMEM));
 	if (ret < 0)
 		return (0);
-	/*if (strcmp_quote(cmd->exec, "echo") == 1) // on le decale dans le is_builtin
-		i = get_echo_flag(cmd, cmd->str, i);*/
-	cmd->builtin = is_builtin(cmd);
-	if (get_args(cmd, i) <= 0)
-		return (0);
-	cmd->exec = dollar_expand(cmd->exec, cmd->env, 0, 0);
-	free(cmd->args[0]);
-	cmd->args[0] = cmd->exec;
-	expand_args(cmd);
-	if (cmd->args [0] && (cmd->args[0][0] == '/' || cmd->args[0][0] == '.'))
-		cmd->is_path = 1;
-	cmd->is_valid = 1;
+	ret = command_dependency(cmd, i);
+	if (ret == -1 || ret == 0)
+		return (ret);
 	return (1);
 }
