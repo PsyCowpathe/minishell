@@ -6,15 +6,17 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 03:31:12 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/27 04:37:50 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/28 03:07:03 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	args_dependency(t_cmd *cmd, int i, int *size, int j)
+int	args_dependency(t_cmd *cmd, int *i, int *size, int j)
 {
-	*size = size_to_char(cmd->str, i, " \r\n\v\t\f");
+	while (ft_iswhitespace(cmd->str[*i]) == 1)
+		*i = *i + 1;
+	*size = size_to_char(cmd->str, *i, " \r\n\v\t\f");
 	if (*size == -1)
 		return (0);
 	if (*size == 0)
@@ -33,14 +35,14 @@ int	cut_args(t_cmd *cmd, int j, int *i, int ret)
 	while (cmd->str[*i] && ret == 1)
 	{
 		ret = cut_redir(cmd, i);
+		if (ret == -3)
+			return (-3);
 		if (ret == -2)
 			return (return_perror(-1, "error ", ENOMEM));
 		if (ret < 0)
 			return (0);
 	}
-	while (ft_iswhitespace(cmd->str[*i]) == 1)
-		*i = *i + 1;
-	ret = args_dependency(cmd, *i, &size, j);
+	ret = args_dependency(cmd, i, &size, j);
 	if (ret == 0 || ret == 1)
 		return (ret);
 	if (new_malloc((void **)&tmp, sizeof(char), size + 1) == 0)

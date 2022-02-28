@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:45:30 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/27 05:10:48 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/28 03:19:21 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,20 +19,20 @@
 # include <readline/history.h>
 # include <sys/wait.h>
 # include <fcntl.h>
-#include <sys/stat.h>
-#include <signal.h>
-#include <errno.h>
+# include <sys/stat.h>
+# include <signal.h>
+# include <errno.h>
 
 extern pid_t	g_pid_t[1025];
 
 typedef struct s_env
 {
-	char	*str;
-	char	*key;
-	char	*value;
-	int		set;
+	char			*str;
+	char			*key;
+	char			*value;
+	int				set;
 	struct s_env	*next;
-}				t_env;
+}					t_env;
 
 typedef struct s_cmd
 {
@@ -61,11 +61,11 @@ typedef struct s_inst
 
 // instruction
 
-int	cut_instruction(t_inst *inst, t_env *env, int i, int ret);
+int		cut_instruction(t_inst *inst, t_env *env, int i, int ret);
 
 //command
 
-int		cut_command(t_cmd *cmd);
+int		cut_command(t_cmd *cmd, int i, int ret);
 
 // lst_inst_utils
 
@@ -77,7 +77,6 @@ void	instclear(t_inst *lst);
 t_cmd	*cmdnew(char *content, t_env *env);
 void	cmdadd_back(t_cmd **alst, t_cmd *new);
 t_cmd	*cmdlast(t_cmd *lst);
-
 
 // lst_env_utils
 
@@ -102,8 +101,7 @@ int		expand_args(t_cmd *cmd);
 
 // builtin
 
-void	exec_echo(t_cmd *cmd);
-void	simple_builtin(t_cmd *cmd);
+int		simple_builtin(t_cmd *cmd);
 
 // path
 
@@ -158,11 +156,12 @@ char	*dollar_expand_return_fucktion(char *full_res, int d);
 //quote
 
 void	remove_quotes(char *str);
+void	shift(char *str, int i);
 
 //pid
 
 void	set_pid(int pid);
-void	init_pid();
+void	init_pid(void);
 
 //signals
 
@@ -178,6 +177,7 @@ int		return_perror(int ret, char *msg, int code);
 void	envtab_clear(char **env_tab);
 void	env_clear(t_env *env);
 void	cmd_clear(t_cmd *cmd);
+int		instclear_return(t_inst *inst, int ret);
 
 //path_utility
 
@@ -185,6 +185,19 @@ int		path_count(char *str);
 char	*join_path(char *exec, char *path);
 
 //args
+
 int		get_args(t_cmd *cmd, int i);
+
+//cd
+
+int		exec_cd(t_cmd *cmd);
+
+//export
+
+int		exec_export(t_cmd *cmd, int i, int ret);
+
+//echo
+
+int		exec_echo(t_cmd *cmd, int i, int fd, int flag);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/30 18:26:48 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/27 04:37:51 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/28 03:09:08 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,14 @@ char	**get_path(t_env *env, int i, int d)
 	return (res);
 }
 
+void	envtab_clear_exit(char **env_tab, char **path)
+{
+	if (path != NULL)
+		envtab_clear(path);
+	envtab_clear(env_tab);
+	exit(return_perror(1, "error ", ENOMEM));
+}
+
 void	exec_lonely_path(t_cmd *cmd, char **env_tab)
 {
 	char	**path;
@@ -47,21 +55,14 @@ void	exec_lonely_path(t_cmd *cmd, char **env_tab)
 
 	path = get_path(cmd->env, 0, 0);
 	if (path == NULL)
-	{
-		envtab_clear(env_tab);
-		exit(return_perror(1, "error ", ENOMEM));
-	}
+		envtab_clear_exit(env_tab, NULL);
 	i = 0;
 	while (cmd->ret[0] == -1 && path[i])
 	{
 		cmd->ret[0] = 0;
 		tmp = join_path(cmd->exec, path[i]);
 		if (tmp == NULL)
-		{
-			envtab_clear(path);
-			envtab_clear(env_tab);
-			exit(return_perror(1, "error ", ENOMEM));
-		}
+			envtab_clear_exit(env_tab, path);
 		cmd->ret[0] = execve(tmp, cmd->args, env_tab);
 		free(tmp);
 		i++;
@@ -82,20 +83,13 @@ int	test_all_path(t_cmd *cmd, char	**env_tab)
 	i = 0;
 	path = get_path(cmd->env, 0, 0);
 	if (path == NULL)
-	{
-		envtab_clear(env_tab);
-		exit(return_perror(1, "error ", ENOMEM));
-	}
+		envtab_clear_exit(env_tab, NULL);
 	while (cmd->ret[0] == -1 && path[i])
 	{
 		cmd->ret[0] = 0;
 		tmp = join_path(cmd->exec, path[i]);
 		if (tmp == NULL)
-		{
-			envtab_clear(path);
-			envtab_clear(env_tab);
-			exit(return_perror(1, "error ", ENOMEM));
-		}
+			envtab_clear_exit(env_tab, path);
 		cmd->ret[0] = execve(tmp, cmd->args, env_tab);
 		free(tmp);
 		i++;

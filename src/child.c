@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 16:03:55 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/27 04:37:51 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/28 03:09:07 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,10 @@
 void	exec_child(t_cmd *cmd)
 {
 	if (cmd->builtin > 0)
-		;//simple->builtin();
+	{
+		if (simple_builtin(cmd) < 0)
+			exit(1);
+	}
 	else if (exec_path(cmd) == 0)
 	{
 		perror("Error");

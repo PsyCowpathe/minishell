@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 19:06:46 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/27 04:37:57 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/27 22:02:57 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,22 @@ int	free_fragment(char *fragment, int ret)
 	return (ret);
 }
 
+int	cut_redir_dependency(t_cmd *cmd, char *fragment, int ret, int redir_type)
+{
+	if (ret == -1)
+		return (-2);
+	ret = verif_open(cmd, fragment, redir_type);
+	if (ret == -3)
+		return (-3);
+	if (ret == -1)
+		return (free_fragment(fragment, -2));
+	if (ret != 1)
+		return (free_fragment(fragment, -1));
+	if (fragment)
+		free(fragment);
+	return (1);
+}
+
 int	cut_redir(t_cmd *cmd, int *i)
 {
 	int		redir_type;
@@ -89,15 +105,9 @@ int	cut_redir(t_cmd *cmd, int *i)
 		else
 			cmd->redir_type[0] = redir_type;
 		ret = cpy_size_to_char(&fragment, cmd->str, i, " \r\n\v\t\f");
-		if (ret == -1)
-			return (-2);
-		ret = verif_open(cmd, fragment, redir_type);
-		if (ret == -1)
-			return (free_fragment(fragment, -2));
-		if (ret != 1)
-			return (free_fragment(fragment, -1));
-		if (fragment)
-			free(fragment);
+		ret = cut_redir_dependency(cmd, fragment, ret, redir_type);
+		if (ret < 0)
+			return (ret);
 		return (1);
 	}
 	if (redir_type < 0)

@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 16:28:37 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/27 05:10:46 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/27 22:02:54 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	cut_instruction_dependency(t_inst *inst, t_cmd *ctmp, int *i, char *command)
 	free(command);
 	if (inst->str[*i] == '|')
 		(*i)++;
-	ret = cut_command(cmdlast(inst->cmds));
+	ret = cut_command(cmdlast(inst->cmds), 0, 1);
 	if (ret == -1)
 		return (-1);
 	if (ret == 0)

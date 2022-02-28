@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 16:35:29 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/27 04:37:48 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/27 22:02:55 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ int	command_dependency(t_cmd *cmd, int i)
 {
 	int		ret;
 
-	cmd->builtin = is_builtin(cmd);
 	ret = get_args(cmd, i);
 	if (ret == -1)
 		return (-1);
@@ -74,6 +73,9 @@ int	command_dependency(t_cmd *cmd, int i)
 	cmd->exec = dollar_expand(cmd->exec, cmd->env, 0, 0);
 	if (cmd->exec == (char *)1)
 		return (return_perror(-1, "error ", ENOMEM));
+	if (cmd->exec == NULL)
+		return (0);
+	cmd->builtin = is_builtin(cmd);
 	free(cmd->args[0]);
 	cmd->args[0] = cmd->exec;
 	if (expand_args(cmd) == -2)
@@ -83,13 +85,8 @@ int	command_dependency(t_cmd *cmd, int i)
 	return (1);
 }
 
-int	cut_command(t_cmd *cmd)
+int	cut_command(t_cmd *cmd, int i, int ret)
 {
-	int		i;
-	int		ret;
-
-	i = 0;
-	ret = 1;
 	while (ft_iswhitespace(cmd->str[i]) == 1)
 		i++;
 	while (cmd->str[i] && ret == 1)
@@ -97,6 +94,8 @@ int	cut_command(t_cmd *cmd)
 		ret = cut_redir(cmd, &i);
 		if (ret == -2)
 			return (return_perror(-1, "error ", ENOMEM));
+		if (ret == -3)
+			return (-1);
 		if (ret < 0)
 			return (0);
 	}

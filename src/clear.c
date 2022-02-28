@@ -6,11 +6,18 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 21:45:41 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/27 05:10:47 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/28 03:19:21 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	instclear_return(t_inst *inst, int ret)
+{
+	if (inst)
+		instclear(inst);
+	return (ret);
+}
 
 void	envtab_clear(char **env_tab)
 {
@@ -22,6 +29,7 @@ void	envtab_clear(char **env_tab)
 		while (env_tab[j])
 		{
 			free(env_tab[j]);
+			env_tab[j] = NULL;
 			j++;
 		}
 		free(env_tab);

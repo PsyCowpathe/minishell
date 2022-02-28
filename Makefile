@@ -6,7 +6,7 @@
 #    By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/24 18:29:21 by agirona           #+#    #+#              #
-#    Updated: 2022/02/27 04:30:39 by agirona          ###   ########lyon.fr    #
+#    Updated: 2022/02/28 03:06:07 by agirona          ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ SRCS = instruction.c lst_cmd_utils.c lst_inst_utils.c main.c utility.c \
 	   command.c command_utility.c builtin.c path.c redirection.c open.c \
 	   child.c exec.c input_output.c lst_env_utils.c env.c dollar.c args.c \
 	   dollar_utility.c pid.c signals.c error.c clear.c path_utility.c quote.c \
-	   exec_utility.c
+	   exec_utility.c cd.c export.c echo.c
 
 SRCS_DIR = src
 

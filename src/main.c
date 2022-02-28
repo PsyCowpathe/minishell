@@ -6,7 +6,7 @@
 /*   By: agoublai <agoublai@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:45:25 by agirona           #+#    #+#             */
-/*   Updated: 2022/02/27 05:10:49 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2022/02/28 03:19:20 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,24 @@ int	cut_input(t_inst **inst, char *input, int *i)
 	return (1);
 }
 
+int	exec_line_dependency(t_inst *inst)
+{
+	int		ret;
+
+	if (inst->cmds->builtin > 0)
+	{
+		ret = simple_builtin(inst->cmds);
+		if (ret != 1)
+			return (ret);
+	}
+	else if (exec_lonely(inst->cmds) == -1)
+	{
+		instclear(inst);
+		return (-1);
+	}
+	return (1023);
+}
+
 int	exec_line(t_inst *inst, char *input, int *i, t_env *env)
 {
 	int		ret;
@@ -48,39 +66,18 @@ int	exec_line(t_inst *inst, char *input, int *i, t_env *env)
 	{
 		ret = cut_input(&inst, input, i);
 		if (ret != 1)
-		{
-			if (inst)
-				instclear(inst);
-			return (ret);
-		}
+			return (instclear_return(inst, ret));
 		ret = cut_instruction(inst, env, 0, 0);
 		if (ret != 1)
-		{
-			instclear(inst);
-			return (ret);
-		}
-		//builting_detection;
+			return (instclear_return(inst, ret));
 		if (inst->cmds->next == NULL)
 		{
-			if (inst->cmds->builtin > 0)
-				simple_builtin(inst->cmds);
-			else
-			{
-				if (exec_lonely(inst->cmds) == -1)
-				{
-					instclear(inst);
-					return (-1);
-				}
-			}
+			ret = exec_line_dependency(inst);
+			if (ret != 1023)
+				return (ret);
 		}
-		else
-		{
-			if (exec_pipe(inst->cmds) == -1)
-			{
-				instclear(inst);
-				return (-1);
-			}
-		}
+		else if (exec_pipe(inst->cmds) == -1)
+			return (instclear_return(inst, -1));
 		instclear(inst);
 	}
 	return (1);
